@@ -8,7 +8,6 @@ pub struct Ipv4Header{
 impl Ipv4Header{
     pub fn new(packet: Ipv4Packet) -> Ipv4Header{
         let mut data = Vec::new();
-        let version = packet.get_version();
         data.extend((0..4).rev().map(|i| ((packet.get_version() >> i) & 1) as i8));
         data.extend((0..4).rev().map(|i| ((packet.get_header_length() >> i) & 1) as i8));
         data.extend((0..6).rev().map(|i| ((packet.get_dscp() >> i) & 1) as i8));
@@ -22,7 +21,7 @@ impl Ipv4Header{
         data.extend((0..16).rev().map(|i| ((packet.get_checksum() >> i) & 1) as i8));
         data.extend((0..32).map(|i| ((packet.get_source().octets()[i/8] >> (7 - (i % 8))) & 1) as i8));
         data.extend((0..32).map(|i| ((packet.get_destination().octets()[i/8] >> (7 - (i % 8))) & 1) as i8));
-        data.extend(get_options_bits(&packet.get_options_raw()));
+        data.extend(get_options_bits(packet.get_options_raw()));
         Ipv4Header{
             data,
         }
