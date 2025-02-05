@@ -19,3 +19,4 @@ Rust adaptation of [nprint](https://nprint.github.io/)
 ### Miscellaneous
 - Better Readme
 - Documentation
+- Setup test github actions
