@@ -12,7 +12,7 @@ Rust adaptation of [nprint](https://nprint.github.io/)
   - TCP ✔ 
   - Ethernet
   - IPv6
-  - UDP
+  - UDP ✔ 
   - QUIC
   - ICMP
   - Payload
