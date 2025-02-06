@@ -9,7 +9,7 @@ Rust adaptation of [nprint](https://nprint.github.io/)
 - Parsing a set of packets per connection (1/2/5/10/20/...)
 - Parse protocols:
   - IPv4 ✔ 
-  - TCP
+  - TCP ✔ 
   - Ethernet
   - IPv6
   - UDP

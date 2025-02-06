@@ -6,7 +6,7 @@ pub struct Ipv4Header{
 }
 
 impl Ipv4Header{
-    pub fn new(packet: Ipv4Packet) -> Ipv4Header{
+    pub fn new(packet: &Ipv4Packet) -> Ipv4Header{
         let mut data = Vec::new();
         data.extend((0..4).rev().map(|i| ((packet.get_version() >> i) & 1) as i8));
         data.extend((0..4).rev().map(|i| ((packet.get_header_length() >> i) & 1) as i8));
