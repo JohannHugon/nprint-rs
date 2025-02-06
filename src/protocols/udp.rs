@@ -16,8 +16,8 @@ impl UdpHeader{
             data,
         }
     }
-    pub fn get_data(self)->Vec<i8>{
-        self.data
+    pub fn get_data(&self)->&Vec<i8>{
+        &self.data
     }
     pub fn remove(&mut self,start: usize,end:usize){
         self.data[start..=end].fill(0);
