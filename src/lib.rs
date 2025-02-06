@@ -26,7 +26,6 @@ impl Nprint{
         if ethernet.get_ethertype() == EtherTypes::Ipv4{
             let ipv4_packet = Ipv4Packet::new(ethernet.payload()).unwrap();
             ipv4 = Some(Ipv4Header::new(&ipv4_packet)); 
-            println!("Proto {:?}",ipv4_packet.get_next_level_protocol());
             if ipv4_packet.get_next_level_protocol() == IpNextHeaderProtocols::Tcp{
                 tcp = Some(TcpHeader::new(&TcpPacket::new(ipv4_packet.payload()).unwrap()));
             } else if ipv4_packet.get_next_level_protocol() == IpNextHeaderProtocols::Udp{
