@@ -16,6 +16,7 @@ impl TcpHeader{
         data.extend((0..4).rev().map(|i| ((packet.get_reserved() >> i) & 1) as i8));
         data.extend((0..8).rev().map(|i| ((packet.get_flags() >> i) & 1) as i8));
         data.extend((0..16).rev().map(|i| ((packet.get_window() >> i) & 1) as i8));
+        data.extend((0..16).rev().map(|i| ((packet.get_checksum() >> i) & 1) as i8));
         data.extend((0..16).rev().map(|i| ((packet.get_urgent_ptr() >> i) & 1) as i8));
         data.extend(get_options_bits(packet.get_options_raw()));
         TcpHeader{
@@ -28,7 +29,7 @@ impl TcpHeader{
     pub fn remove(&mut self,start: usize,end:usize){
         self.data[start..=end].fill(0);
     }
-    pub fn get_tcp_headers() -> Vec<String> {
+    pub fn get_headers() -> Vec<String> {
         let fields = vec![
             ("tcp_sprt", 16),
             ("tcp_dprt", 16),
@@ -60,7 +61,7 @@ impl TcpHeader{
 fn get_options_bits(options: &[u8]) -> Vec<i8> {
     let mut data = Vec::new();
     for option in options {
-        data.push(*option as i8);   
+        data.extend((0..8).rev().map(|i| ((option >> i) & 1) as i8));
     }
     while data.len() < 320 {
         data.push(-1);
