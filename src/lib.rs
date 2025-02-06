@@ -23,7 +23,7 @@ impl Nprint{
             let ipv4_packet = Ipv4Packet::new(ethernet.payload()).unwrap();
             ipv4 = Some(Ipv4Header::new(&ipv4_packet)); 
             if ipv4_packet.get_next_level_protocol() == IpNextHeaderProtocols::Tcp{
-                tcp = Some(TcpHeader::new(TcpPacket::new(ipv4_packet.payload()).unwrap()))
+                tcp = Some(TcpHeader::new(&TcpPacket::new(ipv4_packet.payload()).unwrap()))
             } 
         } else {
             todo!()

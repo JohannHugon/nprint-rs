@@ -6,7 +6,7 @@ pub struct TcpHeader{
 }
 
 impl TcpHeader{
-    pub fn new(packet: TcpPacket) -> TcpHeader{
+    pub fn new(packet: &TcpPacket) -> TcpHeader{
         let mut data = Vec::new();
         data.extend((0..16).rev().map(|i| ((packet.get_source() >> i) & 1) as i8));
         data.extend((0..16).rev().map(|i| ((packet.get_destination() >> i) & 1) as i8));
