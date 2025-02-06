@@ -1,11 +1,11 @@
-use pnet::packet::tcp::{TcpPacket};
+use pnet::packet::tcp::TcpPacket;
 
 #[derive(Clone,Debug)]
 pub struct TcpHeader{
     data: Vec<i8>,
 }
 
-impl Ipv4Header{
+impl TcpHeader{
     pub fn new(packet: TcpPacket) -> TcpHeader{
         let mut data = Vec::new();
         data.extend((0..16).rev().map(|i| ((packet.get_source() >> i) & 1) as i8));
@@ -18,7 +18,7 @@ impl Ipv4Header{
         data.extend((0..16).rev().map(|i| ((packet.get_window() >> i) & 1) as i8));
         data.extend((0..16).rev().map(|i| ((packet.get_urgent_ptr() >> i) & 1) as i8));
         data.extend(get_options_bits(packet.get_options_raw()));
-        Ipv4Header{
+        TcpHeader{
             data,
         }
     }
