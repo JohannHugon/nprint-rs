@@ -26,8 +26,8 @@ impl Ipv4Header{
             data,
         }
     }
-    pub fn get_data(self)->Vec<i8>{
-        self.data
+    pub fn get_data(&self)->&Vec<i8>{
+        &self.data
     }
     pub fn remove_ips(&mut self){
         self.remove(96,127);
