@@ -28,3 +28,9 @@ jobs:
       - name: Run Clippy
         run: cargo clippy --all-targets --all-features
 
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run fmt
+        run: cargo fmt --check
