@@ -16,12 +16,15 @@ Rust adaptation of [nprint](https://nprint.github.io/)
   - QUIC
   - ICMP
   - Payload
+ 
 ### Miscellaneous
 - Better Readme
 - Documentation
 - Setup test github actions
 
 ## How to contribute
+If you have any doubts or need additional information, don't hesitate to ask for more information in the comments section.
+
 ### Step by step
 - Assign yourself to an issue
 - Create a branch
