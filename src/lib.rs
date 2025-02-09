@@ -19,24 +19,28 @@ pub struct Nprint{
 
 impl Nprint{
     pub fn new(packet:&[u8])-> Nprint{
-        let ethernet = EthernetPacket::new(&packet).unwrap();
-        let mut ipv4 = None;
-        let mut tcp = None;
-        let mut udp = None;
-        if ethernet.get_ethertype() == EtherTypes::Ipv4{
-            let ipv4_packet = Ipv4Packet::new(ethernet.payload()).unwrap();
-            ipv4 = Some(Ipv4Header::new(&ipv4_packet)); 
-            if ipv4_packet.get_next_level_protocol() == IpNextHeaderProtocols::Tcp{
-                tcp = Some(TcpHeader::new(&TcpPacket::new(ipv4_packet.payload()).unwrap()));
-            } else if ipv4_packet.get_next_level_protocol() == IpNextHeaderProtocols::Udp{
-                udp = Some(UdpHeader::new(&UdpPacket::new(ipv4_packet.payload()).unwrap()));
-            } else {
-                todo!()
-            }
-        } else {
-            todo!()
-        }
+        let ethernet = EthernetPacket::new(packet).unwrap();
 
+        let (ipv4,tcp,udp) = if ethernet.get_ethertype() == EtherTypes::Ipv4 {
+            let ipv4_packet = Ipv4Packet::new(ethernet.payload()).unwrap();
+            let ipv4 = Some(Ipv4Header::new(&ipv4_packet)); 
+            let (tcp,udp) = match ipv4_packet.get_next_level_protocol(){
+                IpNextHeaderProtocols::Tcp => {
+                    let tcp = Some(TcpHeader::new(&TcpPacket::new(ipv4_packet.payload()).unwrap()));
+                    (tcp,None)
+                }
+                IpNextHeaderProtocols::Udp => {
+                    let udp = Some(UdpHeader::new(&UdpPacket::new(ipv4_packet.payload()).unwrap()));
+                    (None,udp)
+                } 
+                _  => {
+                    (None,None)
+                }
+            };
+            (ipv4,tcp,udp)
+        } else {
+            (None, None, None)
+        };
         Nprint{
             ipv4,
             tcp,
