@@ -9,8 +9,7 @@ mod udp_header_tests {
         let udp_packet = UdpPacket::new(&raw_packet).unwrap();
         let udp_header = UdpHeader::new(&udp_packet);
         //assert_eq!(udp_header.get_data().len(), 480, "Expected 480 bits in udpHeader data.");
-        let udp_header_test= vec![1,1,1,0,0,0,0,1,0,0,0,1,0,1,0,1,1,1,1,0,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0
-        ];
+        let udp_header_test= [1,1,1,0,0,0,0,1,0,0,0,1,0,1,0,1,1,1,1,0,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0];
         let data = udp_header.get_data();
         println!("{:?}",data);
         for i in 0..udp_header_test.len(){

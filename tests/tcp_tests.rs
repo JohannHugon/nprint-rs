@@ -1,8 +1,7 @@
 #[cfg(test)]
-mod Tcp_header_tests {
+mod tcp_header_tests {
     use nprint_rs::protocols::tcp::TcpHeader; 
     use pnet::packet::tcp::TcpPacket;
-    use pnet::packet::ethernet::{EthernetPacket, EtherTypes};
 
     #[test]
     fn test_tcp_header_creation() {
