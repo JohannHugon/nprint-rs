@@ -7,6 +7,7 @@ use pnet::packet::ipv4::Ipv4Packet;
 use pnet::packet::ip::IpNextHeaderProtocols;
 use pnet::packet::tcp::TcpPacket;
 use pnet::packet::udp::UdpPacket;
+use pnet::packet::vlan::VlanPacket;
 use pnet::packet::Packet;
 use pnet::packet::ethernet::{EthernetPacket,EtherTypes};
 
@@ -23,8 +24,15 @@ impl Nprint{
         let mut ipv4 = None;
         let mut tcp = None;
         let mut udp = None;
-        if ethernet.get_ethertype() == EtherTypes::Ipv4{
-            let ipv4_packet = Ipv4Packet::new(ethernet.payload()).unwrap();
+        let mut ethertype = ethernet.get_ethertype();
+        let mut payload = ethernet.payload().to_vec();
+        if ethertype == EtherTypes::Vlan{
+            let vlan_packet = VlanPacket::new(ethernet.payload()).unwrap();
+            ethertype = vlan_packet.get_ethertype();
+            payload = vlan_packet.payload().to_vec();
+        }
+        if ethertype == EtherTypes::Ipv4{
+            let ipv4_packet = Ipv4Packet::new(&payload).unwrap();
             ipv4 = Some(Ipv4Header::new(&ipv4_packet)); 
             if ipv4_packet.get_next_level_protocol() == IpNextHeaderProtocols::Tcp{
                 tcp = Some(TcpHeader::new(&TcpPacket::new(ipv4_packet.payload()).unwrap()));
