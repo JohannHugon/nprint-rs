@@ -2,7 +2,6 @@
 mod ipv4_header_tests {
     use nprint_rs::protocols::ipv4::Ipv4Header; 
     use pnet::packet::ipv4::Ipv4Packet;
-    use pnet::packet::ethernet::{EthernetPacket, EtherTypes};
 
     #[test]
     fn test_ipv4_header_creation() {

@@ -23,12 +23,10 @@ impl UdpHeader{
         self.data[start..=end].fill(0);
     }
     pub fn get_headers() -> Vec<String> {
-        let fields = vec![
-            ("udp_sport", 16),
+        let fields = [("udp_sport", 16),
             ("udp_dport", 16),
             ("udp_len", 16),
-            ("udp_cksum", 16),
-        ];
+            ("udp_cksum", 16)];
 
         fields
             .iter()
