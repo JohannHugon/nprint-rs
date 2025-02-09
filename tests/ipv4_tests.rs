@@ -25,11 +25,11 @@ mod ipv4_header_tests {
         ipv4_header.remove_ips();
         let without_ip = ipv4_header.get_data();
         println!("{:?}",without_ip);
-        for i in 96..128 {
-            assert_eq!(without_ip[i], 0, "Expected data bit 96-127 to be 0.");
+        for ip_bit in without_ip.iter().take(128).skip(96) {
+            assert_eq!(*ip_bit, 0, "Expected data bit 96-127 to be 0.");
         }
-        for i in 128..160 {
-            assert_eq!(without_ip[i], 0, "Expected data bit 128-159 to be 0.");
+        for ip_bit in without_ip.iter().take(160).skip(128){
+            assert_eq!(*ip_bit, 0, "Expected data bit 128-159 to be 0.");
         }
     }
 
