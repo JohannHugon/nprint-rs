@@ -18,7 +18,6 @@ pub struct Nprint {
     pub udp: Option<UdpHeader>,
 }
 
-
 impl Nprint {
     pub fn new(packet: &[u8]) -> Nprint {
         let ethernet = EthernetPacket::new(packet).unwrap();
