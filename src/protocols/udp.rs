@@ -5,6 +5,12 @@ pub struct UdpHeader {
     data: Vec<i8>,
 }
 
+impl Default for UdpHeader {
+    fn default() -> Self {
+        Self { data: vec![-1; 64] }
+    }
+}
+
 impl UdpHeader {
     pub fn new(packet: &UdpPacket) -> UdpHeader {
         let mut data = Vec::new();

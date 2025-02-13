@@ -5,6 +5,14 @@ pub struct TcpHeader {
     data: Vec<i8>,
 }
 
+impl Default for TcpHeader {
+    fn default() -> Self {
+        Self {
+            data: vec![-1; 480],
+        }
+    }
+}
+
 impl TcpHeader {
     pub fn new(packet: &TcpPacket) -> TcpHeader {
         let mut data = Vec::new();
