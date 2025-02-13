@@ -5,6 +5,14 @@ pub struct Ipv4Header {
     data: Vec<i8>, // 480 = IHL max size
 }
 
+impl Default for Ipv4Header {
+    fn default() -> Self {
+        Self {
+            data: vec![-1; 480],
+        }
+    }
+}
+
 impl Ipv4Header {
     pub fn new(packet: &Ipv4Packet) -> Ipv4Header {
         let mut data = Vec::new();
