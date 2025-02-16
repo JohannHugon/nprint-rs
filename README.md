@@ -20,7 +20,7 @@ Rust adaptation of [nprint](https://nprint.github.io/)
 ### Miscellaneous
 - Better Readme
 - Documentation
-- Setup test github actions
+- Setup test github actions ✔ 
 
 ## How to contribute
 If you have any doubts or need additional information, don't hesitate to ask for more information in the comments section.
