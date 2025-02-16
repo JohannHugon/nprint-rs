@@ -103,7 +103,7 @@ impl Ipv4Header {
 fn get_options_bits(options: &[u8]) -> Vec<f32> {
     let mut data = Vec::new();
     for option in options {
-        data.push(*option as f32);
+        data.extend((0..8).rev().map(|i| ((option >> i) & 1) as f32));
     }
     while data.len() < 320 {
         data.push(-1.);
