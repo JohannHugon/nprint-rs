@@ -1,4 +1,5 @@
 use pnet::packet::ipv4::Ipv4Packet;
+use pnet::packet::Packet;
 
 #[derive(Clone, Debug)]
 pub struct Ipv4Header {
@@ -15,54 +16,23 @@ impl Default for Ipv4Header {
 
 impl Ipv4Header {
     pub fn new(packet: &Ipv4Packet) -> Ipv4Header {
-        let mut data = Vec::new();
-        data.extend(
-            (0..4)
-                .rev()
-                .map(|i| ((packet.get_version() >> i) & 1) as f32),
-        );
-        data.extend(
-            (0..4)
-                .rev()
-                .map(|i| ((packet.get_header_length() >> i) & 1) as f32),
-        );
-        data.extend((0..6).rev().map(|i| ((packet.get_dscp() >> i) & 1) as f32));
-        data.extend((0..2).rev().map(|i| ((packet.get_ecn() >> i) & 1) as f32));
-        data.extend(
-            (0..16)
-                .rev()
-                .map(|i| ((packet.get_total_length() >> i) & 1) as f32),
-        );
-        data.extend(
-            (0..16)
-                .rev()
-                .map(|i| ((packet.get_identification() >> i) & 1) as f32),
-        );
-        data.extend((0..3).rev().map(|i| ((packet.get_flags() >> i) & 1) as f32));
-        data.extend(
-            (0..13)
-                .rev()
-                .map(|i| ((packet.get_fragment_offset() >> i) & 1) as f32),
-        );
-        data.extend((0..8).rev().map(|i| ((packet.get_ttl() >> i) & 1) as f32));
-        data.extend(
-            (0..8)
-                .rev()
-                .map(|i| ((packet.get_next_level_protocol().0 >> i) & 1) as f32),
-        );
-        data.extend(
-            (0..16)
-                .rev()
-                .map(|i| ((packet.get_checksum() >> i) & 1) as f32),
-        );
-        data.extend(
-            (0..32).map(|i| ((packet.get_source().octets()[i / 8] >> (7 - (i % 8))) & 1) as f32),
-        );
-        data.extend(
-            (0..32)
-                .map(|i| ((packet.get_destination().octets()[i / 8] >> (7 - (i % 8))) & 1) as f32),
-        );
-        data.extend(get_options_bits(packet.get_options_raw()));
+        let option = packet.get_options_raw();
+        let mut data = Vec::with_capacity(480);
+        let packet = packet.packet();
+        data.extend((0..4).rev().map(|i| ((packet[0] >> (4 + i)) & 1) as f32));
+        data.extend((0..4).rev().map(|i| ((packet[0] >> i) & 1) as f32));
+        data.extend((0..6).rev().map(|i| ((packet[1] >> (2 + i)) & 1) as f32));
+        data.extend((0..2).rev().map(|i| ((packet[1] >> i) & 1) as f32));
+        data.extend((0..16).map(|i| ((packet[2 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+        data.extend((0..16).map(|i| ((packet[4 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+        data.extend((0..3).rev().map(|i| ((packet[6] >> (5 + i)) & 1) as f32));
+        data.extend((0..13).map(|i| if i < 5 { ((packet[6] >> (4 - i)) & 1) as f32 } else { ((packet[7] >> (7 - (i - 5))) & 1) as f32 }));
+        data.extend((0..8).rev().map(|i| ((packet[8] >> i) & 1) as f32));
+        data.extend((0..8).rev().map(|i| ((packet[9] >> i) & 1) as f32));
+        data.extend((0..16).map(|i| ((packet[10 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+        data.extend((0..32).map(|i| ((packet[12 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+        data.extend((0..32).map(|i| ((packet[16 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+        data.extend(get_options_bits(option));
         Ipv4Header { data }
     }
     pub fn get_data(&self) -> &Vec<f32> {
