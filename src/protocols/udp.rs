@@ -7,8 +7,8 @@ pub struct UdpHeader {
 
 impl Default for UdpHeader {
     fn default() -> Self {
-        Self { 
-            data: vec![-1.; 64] 
+        Self {
+            data: vec![-1.; 64],
         }
     }
 }
