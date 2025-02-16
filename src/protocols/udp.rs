@@ -2,12 +2,14 @@ use pnet::packet::udp::UdpPacket;
 
 #[derive(Clone, Debug)]
 pub struct UdpHeader {
-    data: Vec<i8>,
+    data: Vec<f32>,
 }
 
 impl Default for UdpHeader {
     fn default() -> Self {
-        Self { data: vec![-1; 64] }
+        Self {
+            data: vec![-1.; 64],
+        }
     }
 }
 
@@ -17,30 +19,30 @@ impl UdpHeader {
         data.extend(
             (0..16)
                 .rev()
-                .map(|i| ((packet.get_source() >> i) & 1) as i8),
+                .map(|i| ((packet.get_source() >> i) & 1) as f32),
         );
         data.extend(
             (0..16)
                 .rev()
-                .map(|i| ((packet.get_destination() >> i) & 1) as i8),
+                .map(|i| ((packet.get_destination() >> i) & 1) as f32),
         );
         data.extend(
             (0..16)
                 .rev()
-                .map(|i| ((packet.get_length() >> i) & 1) as i8),
+                .map(|i| ((packet.get_length() >> i) & 1) as f32),
         );
         data.extend(
             (0..16)
                 .rev()
-                .map(|i| ((packet.get_checksum() >> i) & 1) as i8),
+                .map(|i| ((packet.get_checksum() >> i) & 1) as f32),
         );
         UdpHeader { data }
     }
-    pub fn get_data(&self) -> &Vec<i8> {
+    pub fn get_data(&self) -> &Vec<f32> {
         &self.data
     }
     pub fn remove(&mut self, start: usize, end: usize) {
-        self.data[start..=end].fill(0);
+        self.data[start..=end].fill(0.);
     }
     pub fn get_headers() -> Vec<String> {
         let fields = [

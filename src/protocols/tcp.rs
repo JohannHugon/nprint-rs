@@ -2,13 +2,13 @@ use pnet::packet::tcp::TcpPacket;
 
 #[derive(Clone, Debug)]
 pub struct TcpHeader {
-    data: Vec<i8>,
+    data: Vec<f32>,
 }
 
 impl Default for TcpHeader {
     fn default() -> Self {
         Self {
-            data: vec![-1; 480],
+            data: vec![-1.; 480],
         }
     }
 }
@@ -19,57 +19,57 @@ impl TcpHeader {
         data.extend(
             (0..16)
                 .rev()
-                .map(|i| ((packet.get_source() >> i) & 1) as i8),
+                .map(|i| ((packet.get_source() >> i) & 1) as f32),
         );
         data.extend(
             (0..16)
                 .rev()
-                .map(|i| ((packet.get_destination() >> i) & 1) as i8),
+                .map(|i| ((packet.get_destination() >> i) & 1) as f32),
         );
         data.extend(
             (0..32)
                 .rev()
-                .map(|i| ((packet.get_sequence() >> i) & 1) as i8),
+                .map(|i| ((packet.get_sequence() >> i) & 1) as f32),
         );
         data.extend(
             (0..32)
                 .rev()
-                .map(|i| ((packet.get_acknowledgement() >> i) & 1) as i8),
+                .map(|i| ((packet.get_acknowledgement() >> i) & 1) as f32),
         );
         data.extend(
             (0..4)
                 .rev()
-                .map(|i| ((packet.get_data_offset() >> i) & 1) as i8),
+                .map(|i| ((packet.get_data_offset() >> i) & 1) as f32),
         );
         data.extend(
             (0..4)
                 .rev()
-                .map(|i| ((packet.get_reserved() >> i) & 1) as i8),
+                .map(|i| ((packet.get_reserved() >> i) & 1) as f32),
         );
-        data.extend((0..8).rev().map(|i| ((packet.get_flags() >> i) & 1) as i8));
+        data.extend((0..8).rev().map(|i| ((packet.get_flags() >> i) & 1) as f32));
         data.extend(
             (0..16)
                 .rev()
-                .map(|i| ((packet.get_window() >> i) & 1) as i8),
-        );
-        data.extend(
-            (0..16)
-                .rev()
-                .map(|i| ((packet.get_checksum() >> i) & 1) as i8),
+                .map(|i| ((packet.get_window() >> i) & 1) as f32),
         );
         data.extend(
             (0..16)
                 .rev()
-                .map(|i| ((packet.get_urgent_ptr() >> i) & 1) as i8),
+                .map(|i| ((packet.get_checksum() >> i) & 1) as f32),
+        );
+        data.extend(
+            (0..16)
+                .rev()
+                .map(|i| ((packet.get_urgent_ptr() >> i) & 1) as f32),
         );
         data.extend(get_options_bits(packet.get_options_raw()));
         TcpHeader { data }
     }
-    pub fn get_data(&self) -> &Vec<i8> {
+    pub fn get_data(&self) -> &Vec<f32> {
         &self.data
     }
     pub fn remove(&mut self, start: usize, end: usize) {
-        self.data[start..=end].fill(0);
+        self.data[start..=end].fill(0.);
     }
     pub fn get_headers() -> Vec<String> {
         let fields = vec![
@@ -100,13 +100,13 @@ impl TcpHeader {
             .collect()
     }
 }
-fn get_options_bits(options: &[u8]) -> Vec<i8> {
+fn get_options_bits(options: &[u8]) -> Vec<f32> {
     let mut data = Vec::new();
     for option in options {
-        data.extend((0..8).rev().map(|i| ((option >> i) & 1) as i8));
+        data.extend((0..8).rev().map(|i| ((option >> i) & 1) as f32));
     }
     while data.len() < 320 {
-        data.push(-1);
+        data.push(-1.);
     }
     data
 }

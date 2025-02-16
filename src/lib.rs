@@ -68,7 +68,7 @@ impl Nprint {
         }
         Nprint { ipv4, tcp, udp }
     }
-    pub fn print(&self) -> Vec<i8> {
+    pub fn print(&self) -> Vec<f32> {
         let mut output = vec![];
         if let Some(ipv4) = &self.ipv4 {
             output.extend(ipv4.get_data());
