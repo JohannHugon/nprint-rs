@@ -34,3 +34,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run fmt
         run: cargo fmt --check
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: boa-dev/criterion-compare-action@v3
+        with:
+          branchName: main
