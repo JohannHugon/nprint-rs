@@ -18,22 +18,10 @@ impl UdpHeader {
     pub fn new(packet: &UdpPacket) -> UdpHeader {
         let mut data = Vec::with_capacity(64);
         let packet = packet.packet();
-        data.extend(
-            (0..16)
-                .map(|i| ((packet[0 + (i / 8)] >> (7 - (i % 8))) & 1) as f32),
-        );
-        data.extend(
-            (0..16)
-                .map(|i| ((packet[2 + (i / 8)] >> (7 - (i % 8))) & 1) as f32),
-        );
-        data.extend(
-            (0..16)
-                .map(|i| ((packet[4 + (i / 8)] >> (7 - (i % 8))) & 1) as f32),
-        );
-        data.extend(
-            (0..16)
-                .map(|i| ((packet[6 + (i / 8)] >> (7 - (i % 8))) & 1) as f32),
-        );
+        data.extend((0..16).map(|i| ((packet[i / 8] >> (7 - (i % 8))) & 1) as f32));
+        data.extend((0..16).map(|i| ((packet[2 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+        data.extend((0..16).map(|i| ((packet[4 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+        data.extend((0..16).map(|i| ((packet[6 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
         UdpHeader { data }
     }
     pub fn get_data(&self) -> &Vec<f32> {

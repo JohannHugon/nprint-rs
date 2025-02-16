@@ -19,49 +19,16 @@ impl TcpHeader {
         let option = packet.get_options_raw();
         let mut data = Vec::with_capacity(480);
         let packet = packet.packet();
-        data.extend(
-            (0..16)
-                .map(|i| ((packet[0 + (i / 8)] >> (7 - (i % 8))) & 1) as f32)
-        );
-        data.extend(
-            (0..16)
-                .map(|i| ((packet[2 + (i / 8)] >> (7 - (i % 8))) & 1) as f32)
-        );
-        data.extend(
-            (0..32)
-                .map(|i| ((packet[4 + (i / 8)] >> (7 - (i % 8))) & 1) as f32)
-        );
-        data.extend(
-            (0..32)
-                .map(|i| ((packet[8 + (i / 8)] >> (7 - (i % 8))) & 1) as f32)
-        );
-        data.extend(
-            (0..4)
-                .rev()
-                .map(|i| ((packet[12] >> (4 + i)) & 1) as f32)
-        );
-        data.extend(
-            (0..4)
-                .rev()
-                .map(|i| ((packet[12] >> i) & 1) as f32)
-        );
-        data.extend(
-            (0..8)
-                .rev()
-                .map(|i| ((packet[13] >> i) & 1) as f32)
-        );
-        data.extend(
-            (0..16)
-                .map(|i| ((packet[14 + (i / 8)] >> (7 - (i % 8))) & 1) as f32)
-        );
-        data.extend(
-            (0..16)
-                .map(|i| ((packet[16 + (i / 8)] >> (7 - (i % 8))) & 1) as f32)
-        );
-        data.extend(
-            (0..16)
-                .map(|i| ((packet[18 + (i / 8)] >> (7 - (i % 8))) & 1) as f32)
-        );
+        data.extend((0..16).map(|i| ((packet[i / 8] >> (7 - (i % 8))) & 1) as f32));
+        data.extend((0..16).map(|i| ((packet[2 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+        data.extend((0..32).map(|i| ((packet[4 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+        data.extend((0..32).map(|i| ((packet[8 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+        data.extend((0..4).rev().map(|i| ((packet[12] >> (4 + i)) & 1) as f32));
+        data.extend((0..4).rev().map(|i| ((packet[12] >> i) & 1) as f32));
+        data.extend((0..8).rev().map(|i| ((packet[13] >> i) & 1) as f32));
+        data.extend((0..16).map(|i| ((packet[14 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+        data.extend((0..16).map(|i| ((packet[16 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+        data.extend((0..16).map(|i| ((packet[18 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
         data.extend(get_options_bits(option));
         TcpHeader { data }
     }
