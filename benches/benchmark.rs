@@ -1,4 +1,5 @@
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{black_box, criterion_group, criterion_main, Criterion};
+
 use nprint_rs::Nprint;
 use nprint_rs::Protocol;
 
@@ -16,9 +17,42 @@ fn benchmark(c: &mut Criterion) {
     c.bench_function("new Nprint", |b| {
         b.iter(|| {
             Nprint::new(
-                &raw_packet,
-                vec![Protocol::Ipv4, Protocol::Tcp, Protocol::Udp],
+                black_box(&raw_packet),
+                black_box(vec![Protocol::Ipv4, Protocol::Tcp, Protocol::Udp]),
             );
+        })
+    });
+    c.bench_function("Add 2 packet Nprint", |b| {
+        b.iter(|| {
+            let mut nprint = Nprint::new(
+                black_box(&raw_packet),
+                black_box(vec![Protocol::Ipv4, Protocol::Tcp, Protocol::Udp]),
+            );
+            nprint.add(&raw_packet);
+        })
+    });
+
+    c.bench_function("Add 5 packet Nprint", |b| {
+        b.iter(|| {
+            let mut nprint = Nprint::new(
+                black_box(&raw_packet),
+                black_box(vec![Protocol::Ipv4, Protocol::Tcp, Protocol::Udp]),
+            );
+            for _i in 0..5 {
+                nprint.add(black_box(&raw_packet));
+            }
+        })
+    });
+
+    c.bench_function("Add 10 packet Nprint", |b| {
+        b.iter(|| {
+            let mut nprint = Nprint::new(
+                black_box(&raw_packet),
+                black_box(vec![Protocol::Ipv4, Protocol::Tcp, Protocol::Udp]),
+            );
+            for _i in 0..10 {
+                nprint.add(black_box(&raw_packet));
+            }
         })
     });
 }
