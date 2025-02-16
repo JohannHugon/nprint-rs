@@ -61,7 +61,7 @@ impl Nprint {
 }
 
 impl Headers {
-    pub fn new(packet: &[u8], protocols: &Vec<Protocol>) -> Headers {
+    pub fn new(packet: &[u8], protocols: &[Protocol]) -> Headers {
         let ethernet = EthernetPacket::new(packet).unwrap();
         let mut ethertype = ethernet.get_ethertype();
         let mut payload = ethernet.payload().to_vec();
@@ -92,10 +92,34 @@ impl Headers {
         } else {
             (None, None, None)
         };
-        Headers { 
-            ipv4:if protocols.contains(&Protocol::Ipv4) { if ipv4.is_some() {ipv4} else {Some(Ipv4Header::default())}} else {None},
-            tcp:if protocols.contains(&Protocol::Tcp) { if tcp.is_some() {tcp} else {Some(TcpHeader::default())}} else {None},
-            udp:if protocols.contains(&Protocol::Udp) { if udp.is_some() {udp} else {Some(UdpHeader::default())}} else {None},
+        Headers {
+            ipv4: if protocols.contains(&Protocol::Ipv4) {
+                if ipv4.is_some() {
+                    ipv4
+                } else {
+                    Some(Ipv4Header::default())
+                }
+            } else {
+                None
+            },
+            tcp: if protocols.contains(&Protocol::Tcp) {
+                if tcp.is_some() {
+                    tcp
+                } else {
+                    Some(TcpHeader::default())
+                }
+            } else {
+                None
+            },
+            udp: if protocols.contains(&Protocol::Udp) {
+                if udp.is_some() {
+                    udp
+                } else {
+                    Some(UdpHeader::default())
+                }
+            } else {
+                None
+            },
         }
     }
 }
