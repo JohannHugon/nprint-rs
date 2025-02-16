@@ -26,7 +26,13 @@ impl Ipv4Header {
         data.extend((0..16).map(|i| ((packet[2 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
         data.extend((0..16).map(|i| ((packet[4 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
         data.extend((0..3).rev().map(|i| ((packet[6] >> (5 + i)) & 1) as f32));
-        data.extend((0..13).map(|i| if i < 5 { ((packet[6] >> (4 - i)) & 1) as f32 } else { ((packet[7] >> (7 - (i - 5))) & 1) as f32 }));
+        data.extend((0..13).map(|i| {
+            if i < 5 {
+                ((packet[6] >> (4 - i)) & 1) as f32
+            } else {
+                ((packet[7] >> (7 - (i - 5))) & 1) as f32
+            }
+        }));
         data.extend((0..8).rev().map(|i| ((packet[8] >> i) & 1) as f32));
         data.extend((0..8).rev().map(|i| ((packet[9] >> i) & 1) as f32));
         data.extend((0..16).map(|i| ((packet[10 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
