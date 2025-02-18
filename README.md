@@ -37,3 +37,10 @@ Your code must pass:
 ```
 cargo fmt --check && cargo clippy --all && cargo test --all && cargo build
 ```
+### Run Benchmark
+Run the benchmark:
+```
+on-your-local-branch->$ cargo bench -- --save-baseline changes
+on-main-branch->$ cargo bench -- --save-baseline base
+$ critcmp base changes
+```
