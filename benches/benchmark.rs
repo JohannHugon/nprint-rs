@@ -38,7 +38,7 @@ fn benchmark(c: &mut Criterion) {
                 black_box(&raw_packet),
                 black_box(vec![Protocol::Ipv4, Protocol::Tcp, Protocol::Udp]),
             );
-            for _i in 0..5 {
+            for _i in 0..4 {
                 nprint.add(black_box(&raw_packet));
             }
         })
@@ -50,7 +50,7 @@ fn benchmark(c: &mut Criterion) {
                 black_box(&raw_packet),
                 black_box(vec![Protocol::Ipv4, Protocol::Tcp, Protocol::Udp]),
             );
-            for _i in 0..10 {
+            for _i in 0..9 {
                 nprint.add(black_box(&raw_packet));
             }
         })
