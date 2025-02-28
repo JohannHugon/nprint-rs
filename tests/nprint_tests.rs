@@ -236,7 +236,6 @@ mod nprint_tests {
         let mut nprint = Nprint::new(&raw_packet, vec![Protocol::Ipv4]);
         nprint.add(&raw_packet);
         nprint.add(&raw_packet);
-        assert_eq!(nprint.count(),3usize,"Wrong number of packet!");
-
+        assert_eq!(nprint.count(), 3usize, "Wrong number of packet!");
     }
 }
