@@ -15,6 +15,7 @@ use pnet::packet::Packet;
 pub struct Nprint {
     pub data: Vec<Headers>,
     protocols: Vec<Protocol>,
+    nb_pkt: usize,
 }
 
 #[derive(Debug)]
@@ -36,6 +37,7 @@ impl Nprint {
         Nprint {
             data: vec![Headers::new(packet, &protocols)],
             protocols,
+            nb_pkt: 1,
         }
     }
 
@@ -57,6 +59,11 @@ impl Nprint {
 
     pub fn add(&mut self, packet: &[u8]) {
         self.data.push(Headers::new(packet, &self.protocols));
+        self.nb_pkt += 1;
+    }
+
+    pub fn count(&self) -> usize {
+        self.nb_pkt
     }
 }
 
