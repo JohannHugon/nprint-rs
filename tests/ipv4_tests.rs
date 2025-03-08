@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod ipv4_header_tests {
+    use nprint_rs::protocols::dyn_protocols::Protocol;
     use nprint_rs::protocols::ipv4::Ipv4Header;
-    use pnet::packet::ipv4::Ipv4Packet;
 
     #[test]
     fn test_ipv4_header_creation() {
@@ -12,8 +12,7 @@ mod ipv4_header_tests {
             0x05, 0xb4, 0x04, 0x02, 0x08, 0x0a, 0xe3, 0xe2, 0x14, 0x23, 0x00, 0x00, 0x00, 0x00,
             0x01, 0x03, 0x03, 0x07,
         ];
-        let ipv4_packet = Ipv4Packet::new(&raw_packet).unwrap();
-        let ipv4_header = Ipv4Header::new(&ipv4_packet);
+        let ipv4_header = Ipv4Header::new(&raw_packet);
         //assert_eq!(ipv4_header.get_data().len(), 480, "Expected 480 bits in Ipv4Header data.");
         let ipv4_header_test = vec![
             0., 1., 0., 0., 0., 1., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
@@ -64,8 +63,7 @@ mod ipv4_header_tests {
             0x05, 0xb4, 0x04, 0x02, 0x08, 0x0a, 0xe3, 0xe2, 0x14, 0x23, 0x00, 0x00, 0x00, 0x00,
             0x01, 0x03, 0x03, 0x07,
         ];
-        let ipv4_packet = Ipv4Packet::new(&raw_packet).unwrap();
-        let mut ipv4_header = Ipv4Header::new(&ipv4_packet);
+        let mut ipv4_header = Ipv4Header::new(&raw_packet);
         ipv4_header.remove_ips();
         let without_ip = ipv4_header.get_data();
         println!("{:?}", without_ip);
@@ -583,8 +581,7 @@ mod ipv4_header_tests {
             0x7f, 0x0, 0x0, 0x1, 0x86, 0x16, 0x0, 0x0, 0x0, 0x2, 0x2, 0x10, 0x0, 0x2, 0x0, 0x0,
             0x0, 0x2, 0x0, 0x4, 0x0, 0x5, 0x0, 0x6, 0x0, 0xef, 0x0, 0x0,
         ];
-        let ipv4_packet = Ipv4Packet::new(&raw_packet).unwrap();
-        let ipv4_header = Ipv4Header::new(&ipv4_packet);
+        let ipv4_header = Ipv4Header::new(&raw_packet);
         let ipv4_header_test = vec![
             0., 1., 0., 0., 1., 0., 1., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
             0., 0., 0., 1., 1., 0., 1., 1., 0., 0., 0., 1., 1., 1., 1., 0., 0., 0., 0., 0., 1., 1.,

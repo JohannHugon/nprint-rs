@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tcp_header_tests {
+    use nprint_rs::protocols::dyn_protocols::Protocol;
     use nprint_rs::protocols::tcp::TcpHeader;
-    use pnet::packet::tcp::TcpPacket;
 
     #[test]
     fn test_tcp_header_creation() {
@@ -10,8 +10,7 @@ mod tcp_header_tests {
             0x20, 0x00, 0x05, 0x24, 0x00, 0x00, 0x02, 0x04, 0x05, 0xb4, 0x01, 0x03, 0x03, 0x02,
             0x01, 0x01, 0x04, 0x02,
         ];
-        let tcp_packet = TcpPacket::new(&raw_packet).unwrap();
-        let tcp_header = TcpHeader::new(&tcp_packet);
+        let tcp_header = TcpHeader::new(&raw_packet);
         //assert_eq!(Tcp_header.get_data().len(), 480, "Expected 480 bits in TcpHeader data.");
         let tcp_header_test = vec![
             1., 1., 0., 1., 1., 1., 1., 0., 1., 0., 0., 1., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0.,

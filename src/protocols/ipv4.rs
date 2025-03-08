@@ -1,3 +1,4 @@
+use crate::protocols::dyn_protocols::Protocol;
 use pnet::packet::ipv4::Ipv4Packet;
 use pnet::packet::Packet;
 
@@ -14,8 +15,9 @@ impl Default for Ipv4Header {
     }
 }
 
-impl Ipv4Header {
-    pub fn new(packet: &Ipv4Packet) -> Ipv4Header {
+impl Protocol for Ipv4Header {
+    fn new(packet: &[u8]) -> Ipv4Header {
+        let packet = Ipv4Packet::new(packet).expect("Not IPv4");
         let option = packet.get_options_raw();
         let mut data = Vec::with_capacity(480);
         let packet = packet.packet();
@@ -41,17 +43,10 @@ impl Ipv4Header {
         data.extend(get_options_bits(option));
         Ipv4Header { data }
     }
-    pub fn get_data(&self) -> &Vec<f32> {
+    fn get_data(&self) -> &Vec<f32> {
         &self.data
     }
-    pub fn remove_ips(&mut self) {
-        self.remove(96, 127);
-        self.remove(128, 159);
-    }
-    pub fn remove(&mut self, start: usize, end: usize) {
-        self.data[start..=end].fill(0.);
-    }
-    pub fn get_headers() -> Vec<String> {
+    fn get_headers() -> Vec<String> {
         let fields = vec![
             ("ipv4_ver", 4),
             ("ipv4_hl", 4),
@@ -69,11 +64,19 @@ impl Ipv4Header {
             ("ipv4_dst", 32),
             ("ipv4_opt", 320),
         ];
-
         fields
             .iter()
             .flat_map(|(name, bits)| (0..*bits).map(move |i| format!("{}_{}", name, i)))
             .collect()
+    }
+}
+impl Ipv4Header {
+    pub fn remove_ips(&mut self) {
+        self.remove(96, 127);
+        self.remove(128, 159);
+    }
+    pub fn remove(&mut self, start: usize, end: usize) {
+        self.data[start..=end].fill(0.);
     }
 }
 fn get_options_bits(options: &[u8]) -> Vec<f32> {
