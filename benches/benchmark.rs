@@ -18,7 +18,11 @@ fn benchmark(c: &mut Criterion) {
         b.iter(|| {
             Nprint::new(
                 black_box(&raw_packet),
-                black_box(vec![ProtocolType::Ipv4, ProtocolType::Tcp, ProtocolType::Udp]),
+                black_box(vec![
+                    ProtocolType::Ipv4,
+                    ProtocolType::Tcp,
+                    ProtocolType::Udp,
+                ]),
             );
         })
     });
@@ -26,7 +30,11 @@ fn benchmark(c: &mut Criterion) {
         b.iter(|| {
             let mut nprint = Nprint::new(
                 black_box(&raw_packet),
-                black_box(vec![ProtocolType::Ipv4, ProtocolType::Tcp, ProtocolType::Udp]),
+                black_box(vec![
+                    ProtocolType::Ipv4,
+                    ProtocolType::Tcp,
+                    ProtocolType::Udp,
+                ]),
             );
             nprint.add(&raw_packet);
         })
@@ -36,7 +44,11 @@ fn benchmark(c: &mut Criterion) {
         b.iter(|| {
             let mut nprint = Nprint::new(
                 black_box(&raw_packet),
-                black_box(vec![ProtocolType::Ipv4, ProtocolType::Tcp, ProtocolType::Udp]),
+                black_box(vec![
+                    ProtocolType::Ipv4,
+                    ProtocolType::Tcp,
+                    ProtocolType::Udp,
+                ]),
             );
             for _i in 0..4 {
                 nprint.add(black_box(&raw_packet));
@@ -48,7 +60,11 @@ fn benchmark(c: &mut Criterion) {
         b.iter(|| {
             let mut nprint = Nprint::new(
                 black_box(&raw_packet),
-                black_box(vec![ProtocolType::Ipv4, ProtocolType::Tcp, ProtocolType::Udp]),
+                black_box(vec![
+                    ProtocolType::Ipv4,
+                    ProtocolType::Tcp,
+                    ProtocolType::Udp,
+                ]),
             );
             for _i in 0..9 {
                 nprint.add(black_box(&raw_packet));
