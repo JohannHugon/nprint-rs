@@ -1,3 +1,4 @@
+use crate::protocols::dyn_protocols::Protocol;
 use pnet::packet::udp::UdpPacket;
 use pnet::packet::Packet;
 
@@ -14,8 +15,9 @@ impl Default for UdpHeader {
     }
 }
 
-impl UdpHeader {
-    pub fn new(packet: &UdpPacket) -> UdpHeader {
+impl Protocol for UdpHeader {
+    fn new(packet: &[u8]) -> UdpHeader {
+        let packet = UdpPacket::new(packet).expect("Not UDP");
         let mut data = Vec::with_capacity(64);
         let packet = packet.packet();
         data.extend((0..16).map(|i| ((packet[i / 8] >> (7 - (i % 8))) & 1) as f32));
@@ -24,13 +26,10 @@ impl UdpHeader {
         data.extend((0..16).map(|i| ((packet[6 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
         UdpHeader { data }
     }
-    pub fn get_data(&self) -> &Vec<f32> {
+    fn get_data(&self) -> &Vec<f32> {
         &self.data
     }
-    pub fn remove(&mut self, start: usize, end: usize) {
-        self.data[start..=end].fill(0.);
-    }
-    pub fn get_headers() -> Vec<String> {
+    fn get_headers() -> Vec<String> {
         let fields = [
             ("udp_sport", 16),
             ("udp_dport", 16),
@@ -42,5 +41,11 @@ impl UdpHeader {
             .iter()
             .flat_map(|(name, bits)| (0..*bits).map(move |i| format!("{}_{}", name, i)))
             .collect()
+    }
+}
+
+impl UdpHeader {
+    pub fn remove(&mut self, start: usize, end: usize) {
+        self.data[start..=end].fill(0.);
     }
 }

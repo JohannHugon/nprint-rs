@@ -1,3 +1,4 @@
+use crate::protocols::dyn_protocols::Protocol;
 use pnet::packet::tcp::TcpPacket;
 use pnet::packet::Packet;
 
@@ -14,8 +15,9 @@ impl Default for TcpHeader {
     }
 }
 
-impl TcpHeader {
-    pub fn new(packet: &TcpPacket) -> TcpHeader {
+impl Protocol for TcpHeader {
+    fn new(packet: &[u8]) -> TcpHeader {
+        let packet = TcpPacket::new(packet).expect("Not TCP");
         let option = packet.get_options_raw();
         let mut data = Vec::with_capacity(480);
         let packet = packet.packet();
@@ -32,13 +34,11 @@ impl TcpHeader {
         data.extend(get_options_bits(option));
         TcpHeader { data }
     }
-    pub fn get_data(&self) -> &Vec<f32> {
+    fn get_data(&self) -> &Vec<f32> {
         &self.data
     }
-    pub fn remove(&mut self, start: usize, end: usize) {
-        self.data[start..=end].fill(0.);
-    }
-    pub fn get_headers() -> Vec<String> {
+
+    fn get_headers() -> Vec<String> {
         let fields = vec![
             ("tcp_sprt", 16),
             ("tcp_dprt", 16),
@@ -67,6 +67,13 @@ impl TcpHeader {
             .collect()
     }
 }
+
+impl TcpHeader {
+    pub fn remove(&mut self, start: usize, end: usize) {
+        self.data[start..=end].fill(0.);
+    }
+}
+
 fn get_options_bits(options: &[u8]) -> Vec<f32> {
     let mut data = Vec::new();
     for option in options {

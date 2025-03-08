@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod nprint_tests {
     use nprint_rs::Nprint;
-    use nprint_rs::Protocol;
+    use nprint_rs::ProtocolType;
 
     #[test]
     fn test_nprint_creation_ipv4() {
@@ -13,7 +13,7 @@ mod nprint_tests {
             0x04, 0x02, 0x08, 0x0a, 0xe3, 0xe2, 0x14, 0x23, 0x00, 0x00, 0x00, 0x00, 0x01, 0x03,
             0x03, 0x07,
         ];
-        let nprint = Nprint::new(&raw_packet, vec![Protocol::Ipv4]);
+        let nprint = Nprint::new(&raw_packet, vec![ProtocolType::Ipv4]);
         assert_eq!(
             *nprint.print(),
             vec![
@@ -59,7 +59,7 @@ mod nprint_tests {
             0x00, 0x01, 0x00, 0x04, 0x48, 0x95, 0xc2, 0x03, 0x58, 0xc0, 0x4d, 0x5a, 0x91, 0xa2,
             0x74, 0x4e, 0xb6, 0x5f, 0x6e, 0x06, 0x46, 0xb4, 0x9b, 0x07, 0x0c, 0xec, 0x2d, 0xa0,
         ];
-        let nprint = Nprint::new(&raw_packet, vec![Protocol::Ipv4, Protocol::Udp]);
+        let nprint = Nprint::new(&raw_packet, vec![ProtocolType::Ipv4, ProtocolType::Udp]);
         assert_eq!(
             *nprint.print(),
             vec![
@@ -109,7 +109,7 @@ mod nprint_tests {
             0x4d, 0x5a, 0x91, 0xa2, 0x74, 0x4e, 0xb6, 0x5f, 0x6e, 0x06, 0x46, 0xb4, 0x9b, 0x07,
             0x0c, 0xec, 0x2d, 0xa0,
         ];
-        let nprint = Nprint::new(&raw_packet, vec![Protocol::Ipv4, Protocol::Udp]);
+        let nprint = Nprint::new(&raw_packet, vec![ProtocolType::Ipv4, ProtocolType::Udp]);
         assert_eq!(
             *nprint.print(),
             vec![
@@ -158,7 +158,7 @@ mod nprint_tests {
             0x04, 0x02, 0x08, 0x0a, 0xe3, 0xe2, 0x14, 0x23, 0x00, 0x00, 0x00, 0x00, 0x01, 0x03,
             0x03, 0x07,
         ];
-        let mut nprint = Nprint::new(&raw_packet, vec![Protocol::Ipv4]);
+        let mut nprint = Nprint::new(&raw_packet, vec![ProtocolType::Ipv4]);
         nprint.add(&raw_packet);
         assert_eq!(
             *nprint.print(),
@@ -233,7 +233,7 @@ mod nprint_tests {
             0x04, 0x02, 0x08, 0x0a, 0xe3, 0xe2, 0x14, 0x23, 0x00, 0x00, 0x00, 0x00, 0x01, 0x03,
             0x03, 0x07,
         ];
-        let mut nprint = Nprint::new(&raw_packet, vec![Protocol::Ipv4]);
+        let mut nprint = Nprint::new(&raw_packet, vec![ProtocolType::Ipv4]);
         nprint.add(&raw_packet);
         nprint.add(&raw_packet);
         assert_eq!(nprint.count(), 3usize, "Wrong number of packet!");

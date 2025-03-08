@@ -1,13 +1,12 @@
 #[cfg(test)]
 mod udp_header_tests {
+    use nprint_rs::protocols::dyn_protocols::Protocol;
     use nprint_rs::protocols::udp::UdpHeader;
-    use pnet::packet::udp::UdpPacket;
 
     #[test]
     fn test_udp_header_creation() {
         let raw_packet: Vec<u8> = vec![0xe1, 0x15, 0xe1, 0x15, 0x00, 0x34, 0x85, 0x00];
-        let udp_packet = UdpPacket::new(&raw_packet).unwrap();
-        let udp_header = UdpHeader::new(&udp_packet);
+        let udp_header = UdpHeader::new(&raw_packet);
         //assert_eq!(udp_header.get_data().len(), 480, "Expected 480 bits in udpHeader data.");
         let udp_header_test = [
             1., 1., 1., 0., 0., 0., 0., 1., 0., 0., 0., 1., 0., 1., 0., 1., 1., 1., 1., 0., 0., 0.,
