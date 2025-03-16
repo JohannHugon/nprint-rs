@@ -8,9 +8,10 @@ nPrint is a standard data representation for network traffic, designed for direc
 ## Documentation
 ### Installation 
 To use Nprint-rs in your project, add the following to your Cargo.toml:
-
+```
 [dependencies]
 nprint-rs = "*"
+```
 
 ### Usage
 Documentation https://docs.rs/TBD/
