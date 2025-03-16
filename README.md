@@ -1,12 +1,29 @@
 # Nprint-rs
-Rust adaptation of [nprint](https://nprint.github.io/)
+
+Rust library that adapt [nprint](https://nprint.github.io/) in Rust.
+
+## Why
+nPrint is a standard data representation for network traffic, designed for direct use with machine learning algorithms, eliminating the need for feature engineering in various traffic analysis tasks. Developing a Rust implementation of nPrint will simplify the creation of network systems that leverage real-world ML deployments, rather than just training and deploying models offline.
+
+## Documentation
+### Installation 
+To use Nprint-rs in your project, add the following to your Cargo.toml:
+
+[dependencies]
+nprint-rs = "*"
+
+### Usage
+Documentation https://docs.rs/TBD/
 
 ## Roadmap
-### Development
+This is an open roadmap, if you want to request or update something don't hesitate to open an issue and then we'll talk about it.
+More information on how to do it in [CONTRUBUTING.md](CONTRUBUTING)
+
+### Features
 - First working parsing ✔ 
 - Structures to handle different packets/mbuf/\[u8\]/vec\[u8\]
 - Convert PCAP to nprint
-- Parsing a set of packets per connection (1/2/5/10/20/...) ✔ 
+- Parse a set of packets per connection (1/2/5/10/20/...) ✔ 
 - Parse protocols:
   - IPv4 ✔ 
   - TCP ✔ 
@@ -18,29 +35,12 @@ Rust adaptation of [nprint](https://nprint.github.io/)
   - Payload
  
 ### Miscellaneous
-- Better Readme
+- Better Readme ✔ 
 - Documentation
-- Setup test github actions ✔ 
+- Set up test github actions ✔ 
 
 ## How to contribute
-If you have any doubts or need additional information, don't hesitate to ask for more information in the comments section.
+If you have any doubts or need additional information, don't hesitate to ask for more information in the comments section of an issue.
+Go to [CONTRUBUTING.md](CONTRUBUTING)
 
-### Step by step
-- Assign yourself to an issue
-- Create a branch
-- Write unit tests
-- Fix the issue 
-- Make sure your code passes the CI's tests
-- Create a PR 
-### Run tests
-Your code must pass:
-```
-cargo fmt --check && cargo clippy --all && cargo test --all && cargo build
-```
-### Run Benchmark
-Run the benchmark:
-```
-on-your-local-branch->$ cargo bench -- --save-baseline changes
-on-main-branch->$ cargo bench -- --save-baseline base
-$ critcmp base changes
-```
+
