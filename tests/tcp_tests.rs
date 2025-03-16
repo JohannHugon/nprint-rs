@@ -545,4 +545,15 @@ mod tcp_header_tests {
             );
         }
     }
+
+    #[test]
+    fn test_tcp_header_bad_header() {
+        let raw_packet: Vec<u8> = vec![0x45, 0x00, 0x00, 0x3c, 0xf5, 0x1b];
+        let tcp_header = TcpHeader::new(&raw_packet);
+        assert_eq!(
+            tcp_header,
+            TcpHeader::default(),
+            "Expected data to be default."
+        );
+    }
 }
