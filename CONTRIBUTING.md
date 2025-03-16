@@ -14,7 +14,7 @@ Please make sure your code passes the tests before creating a PR. Otherwise your
 make test
 ```
 ### Run Benchmark
-As we want to make the library usable in real world deployment, avoiding high overhead for packet processuing is crucial. So before doing any PR, make sure your code does not add a high overhead to the benchmark. Otherwise your PR will not be merged.
+As we want to make the library usable in real world deployment, avoiding high overhead for packet processing is crucial. So before doing any PR, make sure your code does not add an unjustifiable overhead to the benchmark. Otherwise your PR will not be merged.
 ```
 on-your-local-branch->$ cargo bench -- --save-baseline changes
 on-main-branch->$ cargo bench -- --save-baseline base
