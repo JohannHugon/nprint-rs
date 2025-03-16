@@ -12,7 +12,10 @@ To use Nprint-rs in your project, add the following to your Cargo.toml:
 [dependencies]
 nprint-rs = "*"
 ```
-
+Or simply by executing: 
+```
+cargo add nprint-rs
+```
 ### Usage
 Documentation https://docs.rs/TBD/
 
