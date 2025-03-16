@@ -2,7 +2,7 @@ use crate::protocols::dyn_protocols::Protocol;
 use pnet::packet::udp::UdpPacket;
 use pnet::packet::Packet;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, PartialEq, Debug)]
 pub struct UdpHeader {
     data: Vec<f32>,
 }
@@ -17,14 +17,18 @@ impl Default for UdpHeader {
 
 impl Protocol for UdpHeader {
     fn new(packet: &[u8]) -> UdpHeader {
-        let packet = UdpPacket::new(packet).expect("Not UDP");
-        let mut data = Vec::with_capacity(64);
-        let packet = packet.packet();
-        data.extend((0..16).map(|i| ((packet[i / 8] >> (7 - (i % 8))) & 1) as f32));
-        data.extend((0..16).map(|i| ((packet[2 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
-        data.extend((0..16).map(|i| ((packet[4 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
-        data.extend((0..16).map(|i| ((packet[6 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
-        UdpHeader { data }
+        if let Some(packet) = UdpPacket::new(packet) {
+            let mut data = Vec::with_capacity(64);
+            let packet = packet.packet();
+            data.extend((0..16).map(|i| ((packet[i / 8] >> (7 - (i % 8))) & 1) as f32));
+            data.extend((0..16).map(|i| ((packet[2 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+            data.extend((0..16).map(|i| ((packet[4 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+            data.extend((0..16).map(|i| ((packet[6 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+            UdpHeader { data }
+        } else {
+            eprintln!("Not an UDP packet, returnin default...");
+            UdpHeader::default()
+        }
     }
     fn get_data(&self) -> &Vec<f32> {
         &self.data
