@@ -18,7 +18,7 @@ Documentation https://docs.rs/TBD/
 
 ## Roadmap
 This is an open roadmap, if you want to request or update something don't hesitate to open an issue and then we'll talk about it.
-More information on how to do it in [CONTRUBUTING](CONTRUBUTING.md)
+More information on how to do it in [CONTRIBUTING](CONTRIBUTING.md)
 
 ### Features
 - First working parsing ✔ 
