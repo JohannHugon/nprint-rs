@@ -2,7 +2,7 @@ use crate::protocols::dyn_protocols::Protocol;
 use pnet::packet::ipv4::Ipv4Packet;
 use pnet::packet::Packet;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, PartialEq, Debug)]
 pub struct Ipv4Header {
     data: Vec<f32>, // 480 = IHL max size
 }
@@ -17,31 +17,35 @@ impl Default for Ipv4Header {
 
 impl Protocol for Ipv4Header {
     fn new(packet: &[u8]) -> Ipv4Header {
-        let packet = Ipv4Packet::new(packet).expect("Not IPv4");
-        let option = packet.get_options_raw();
-        let mut data = Vec::with_capacity(480);
-        let packet = packet.packet();
-        data.extend((0..4).rev().map(|i| ((packet[0] >> (4 + i)) & 1) as f32));
-        data.extend((0..4).rev().map(|i| ((packet[0] >> i) & 1) as f32));
-        data.extend((0..6).rev().map(|i| ((packet[1] >> (2 + i)) & 1) as f32));
-        data.extend((0..2).rev().map(|i| ((packet[1] >> i) & 1) as f32));
-        data.extend((0..16).map(|i| ((packet[2 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
-        data.extend((0..16).map(|i| ((packet[4 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
-        data.extend((0..3).rev().map(|i| ((packet[6] >> (5 + i)) & 1) as f32));
-        data.extend((0..13).map(|i| {
-            if i < 5 {
-                ((packet[6] >> (4 - i)) & 1) as f32
-            } else {
-                ((packet[7] >> (7 - (i - 5))) & 1) as f32
-            }
-        }));
-        data.extend((0..8).rev().map(|i| ((packet[8] >> i) & 1) as f32));
-        data.extend((0..8).rev().map(|i| ((packet[9] >> i) & 1) as f32));
-        data.extend((0..16).map(|i| ((packet[10 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
-        data.extend((0..32).map(|i| ((packet[12 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
-        data.extend((0..32).map(|i| ((packet[16 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
-        data.extend(get_options_bits(option));
-        Ipv4Header { data }
+        if let Some(packet) = Ipv4Packet::new(packet) {
+            let option = packet.get_options_raw();
+            let mut data = Vec::with_capacity(480);
+            let packet = packet.packet();
+            data.extend((0..4).rev().map(|i| ((packet[0] >> (4 + i)) & 1) as f32));
+            data.extend((0..4).rev().map(|i| ((packet[0] >> i) & 1) as f32));
+            data.extend((0..6).rev().map(|i| ((packet[1] >> (2 + i)) & 1) as f32));
+            data.extend((0..2).rev().map(|i| ((packet[1] >> i) & 1) as f32));
+            data.extend((0..16).map(|i| ((packet[2 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+            data.extend((0..16).map(|i| ((packet[4 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+            data.extend((0..3).rev().map(|i| ((packet[6] >> (5 + i)) & 1) as f32));
+            data.extend((0..13).map(|i| {
+                if i < 5 {
+                    ((packet[6] >> (4 - i)) & 1) as f32
+                } else {
+                    ((packet[7] >> (7 - (i - 5))) & 1) as f32
+                }
+            }));
+            data.extend((0..8).rev().map(|i| ((packet[8] >> i) & 1) as f32));
+            data.extend((0..8).rev().map(|i| ((packet[9] >> i) & 1) as f32));
+            data.extend((0..16).map(|i| ((packet[10 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+            data.extend((0..32).map(|i| ((packet[12 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+            data.extend((0..32).map(|i| ((packet[16 + (i / 8)] >> (7 - (i % 8))) & 1) as f32));
+            data.extend(get_options_bits(option));
+            Ipv4Header { data }
+        } else {
+            eprintln!("Not an IPv4 packet, returnin default...");
+            Ipv4Header::default()
+        }
     }
     fn get_data(&self) -> &Vec<f32> {
         &self.data
