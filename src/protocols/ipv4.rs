@@ -65,7 +65,7 @@ impl Protocol for Ipv4Header {
     }
 
     /// Returns the name list of all field of the protocols.
-    /// 
+    ///
     /// Header names are suffixed with an index (e.g., `ipv4_ver_0`, `ipv4_ver_1`).
     fn get_headers() -> Vec<String> {
         let fields = vec![

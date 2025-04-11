@@ -1,6 +1,6 @@
 use core::fmt::Debug;
 
-/// A trait to provide a generic handling of protocols 
+/// A trait to provide a generic handling of protocols
 ///
 /// Types implementing `Protocol` are expected to provide mechanisms
 /// for constructing an instance from a byte slice, retrieving parsed

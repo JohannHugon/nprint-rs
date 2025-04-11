@@ -48,7 +48,7 @@ impl Protocol for UdpHeader {
     }
 
     /// Returns the name list of all field of the protocols.
-    /// 
+    ///
     /// Header names are suffixed with an index (e.g., `udp_sport_0`, `udp_sport_1`).
     fn get_headers() -> Vec<String> {
         let fields = [
