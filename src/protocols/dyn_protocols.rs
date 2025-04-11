@@ -1,6 +1,6 @@
 use core::fmt::Debug;
 
-pub trait Protocol: Debug {
+pub(crate) trait Protocol: Debug {
     fn new(data: &[u8]) -> Self
     where
         Self: Sized;

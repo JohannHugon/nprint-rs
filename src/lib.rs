@@ -12,13 +12,13 @@ use pnet::packet::Packet;
 
 #[derive(Debug)]
 pub struct Nprint {
-    pub data: Vec<Headers>,
+    data: Vec<Headers>,
     protocols: Vec<ProtocolType>,
     nb_pkt: usize,
 }
 
 #[derive(Debug)]
-pub struct Headers {
+pub(crate) struct Headers {
     pub data: Vec<Box<dyn Protocol>>,
 }
 
