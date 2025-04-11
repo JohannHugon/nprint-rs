@@ -40,7 +40,7 @@ More information on how to do it in [CONTRIBUTING](CONTRIBUTING.md)
  
 ### Miscellaneous
 - Better Readme ✔ 
-- Documentation
+- Documentation ✔ 
 - Set up test github actions ✔ 
 
 ## How to contribute
