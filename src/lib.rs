@@ -54,7 +54,18 @@ impl Nprint {
     /// # Example
     ///
     /// ```rust
-    /// let headers = Nprint::new(&packet_data, &[ProtocolType::Ipv4, ProtocolType::TCP,ProtocolType::UDP]);
+    /// use nprint_rs::ProtocolType;
+    /// use nprint_rs::Nprint;
+    ///
+    /// let packet = vec![
+    ///      0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x08, 0x00, 0x45, 0x00,
+    ///      0x00, 0x3c, 0xf5, 0x1b, 0x40, 0x00, 0x40, 0x06, 0x1b, 0x24, 0xc0, 0xa8, 0x2b, 0x25,
+    ///      0xc6, 0x26, 0x78, 0x88, 0x97, 0xa4, 0x01, 0xbb, 0x96, 0x2e, 0x5e, 0x0b, 0x00, 0x00,
+    ///      0x00, 0x00, 0xa0, 0x02, 0x72, 0x10, 0x25, 0xd4, 0x00, 0x00, 0x02, 0x04, 0x05, 0xb4,
+    ///      0x04, 0x02, 0x08, 0x0a, 0xe3, 0xe2, 0x14, 0x23, 0x00, 0x00, 0x00, 0x00, 0x01, 0x03,
+    ///      0x03, 0x07];
+    ///
+    /// let nprint = Nprint::new(&packet, vec![ProtocolType::Ipv4, ProtocolType::Tcp,ProtocolType::Udp]);
     /// ```    
     pub fn new(packet: &[u8], protocols: Vec<ProtocolType>) -> Nprint {
         Nprint {
@@ -80,7 +91,7 @@ impl Nprint {
         }
         output
     }
-    
+
     /// Adds a new packet to the `Nprint` structure, parsing it using the existing protocols.
     ///
     /// # Arguments
@@ -90,7 +101,7 @@ impl Nprint {
         self.data.push(Headers::new(packet, &self.protocols));
         self.nb_pkt += 1;
     }
-    
+
     /// Returns the number of packets.
     ///
     /// # Returns
@@ -102,7 +113,6 @@ impl Nprint {
 }
 
 impl Headers {
-
     /// Creates a new `Headers` instance by parsing the given packet data
     /// according to the specified list of protocols.
     ///
@@ -116,53 +126,53 @@ impl Headers {
     /// A `Headers` struct containing the parsed protocol headers as specified.
     ///
     pub fn new(packet: &[u8], protocols: &[ProtocolType]) -> Headers {
-    let ethernet = EthernetPacket::new(packet).expect("Failed to parse Ethernet packet");
-    let mut ethertype = ethernet.get_ethertype();
-    let mut payload = ethernet.payload().to_vec();
+        let ethernet = EthernetPacket::new(packet).expect("Failed to parse Ethernet packet");
+        let mut ethertype = ethernet.get_ethertype();
+        let mut payload = ethernet.payload().to_vec();
 
-    if ethertype == EtherTypes::Vlan {
-        if let Some(vlan_packet) = VlanPacket::new(&payload) {
-            ethertype = vlan_packet.get_ethertype();
-            payload = vlan_packet.payload().to_vec();
+        if ethertype == EtherTypes::Vlan {
+            if let Some(vlan_packet) = VlanPacket::new(&payload) {
+                ethertype = vlan_packet.get_ethertype();
+                payload = vlan_packet.payload().to_vec();
+            }
         }
-    }
 
-    let mut ipv4 = None;
-    let mut tcp = None;
-    let mut udp = None;
+        let mut ipv4 = None;
+        let mut tcp = None;
+        let mut udp = None;
 
-    if ethertype == EtherTypes::Ipv4 {
-        if let Some(ipv4_packet) = Ipv4Packet::new(&payload) {
-            ipv4 = Some(Ipv4Header::new(&payload));
+        if ethertype == EtherTypes::Ipv4 {
+            if let Some(ipv4_packet) = Ipv4Packet::new(&payload) {
+                ipv4 = Some(Ipv4Header::new(&payload));
 
-            match ipv4_packet.get_next_level_protocol() {
-                IpNextHeaderProtocols::Tcp => {
-                    tcp = Some(TcpHeader::new(ipv4_packet.payload()));
+                match ipv4_packet.get_next_level_protocol() {
+                    IpNextHeaderProtocols::Tcp => {
+                        tcp = Some(TcpHeader::new(ipv4_packet.payload()));
+                    }
+                    IpNextHeaderProtocols::Udp => {
+                        udp = Some(UdpHeader::new(ipv4_packet.payload()));
+                    }
+                    _ => {}
                 }
-                IpNextHeaderProtocols::Udp => {
-                    udp = Some(UdpHeader::new(ipv4_packet.payload()));
+            }
+        }
+
+        let mut data: Vec<Box<dyn Protocol>> = Vec::with_capacity(protocols.len());
+
+        for proto in protocols {
+            match proto {
+                ProtocolType::Ipv4 => {
+                    data.push(Box::new(ipv4.clone().unwrap_or_else(Ipv4Header::default)));
                 }
-                _ => {}
+                ProtocolType::Tcp => {
+                    data.push(Box::new(tcp.clone().unwrap_or_else(TcpHeader::default)));
+                }
+                ProtocolType::Udp => {
+                    data.push(Box::new(udp.clone().unwrap_or_else(UdpHeader::default)));
+                }
             }
         }
+
+        Headers { data }
     }
-
-    let mut data: Vec<Box<dyn Protocol>> = Vec::with_capacity(protocols.len());
-
-    for proto in protocols {
-        match proto {
-            ProtocolType::Ipv4 => {
-                data.push(Box::new(ipv4.clone().unwrap_or_else(Ipv4Header::default)));
-            }
-            ProtocolType::Tcp => {
-                data.push(Box::new(tcp.clone().unwrap_or_else(TcpHeader::default)));
-            }
-            ProtocolType::Udp => {
-                data.push(Box::new(udp.clone().unwrap_or_else(UdpHeader::default)));
-            }
-        }
-    }
-
-    Headers { data }
-}
 }
