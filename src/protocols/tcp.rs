@@ -42,6 +42,7 @@ impl Protocol for TcpHeader {
         &self.data
     }
 
+    #[allow(dead_code)]
     fn get_headers() -> Vec<String> {
         let fields = vec![
             ("tcp_sprt", 16),
@@ -73,6 +74,7 @@ impl Protocol for TcpHeader {
 }
 
 impl TcpHeader {
+    #[allow(dead_code)]
     pub fn remove(&mut self, start: usize, end: usize) {
         self.data[start..=end].fill(0.);
     }

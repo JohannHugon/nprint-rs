@@ -5,6 +5,7 @@ pub(crate) trait Protocol: Debug {
     where
         Self: Sized;
     fn get_data(&self) -> &Vec<f32>;
+    #[allow(dead_code)]
     fn get_headers() -> Vec<String>
     where
         Self: Sized;

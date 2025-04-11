@@ -50,6 +50,8 @@ impl Protocol for Ipv4Header {
     fn get_data(&self) -> &Vec<f32> {
         &self.data
     }
+
+    #[allow(dead_code)]
     fn get_headers() -> Vec<String> {
         let fields = vec![
             ("ipv4_ver", 4),
@@ -76,10 +78,13 @@ impl Protocol for Ipv4Header {
 }
 
 impl Ipv4Header {
+    #[allow(dead_code)]
     pub fn remove_ips(&mut self) {
         self.remove(96, 127);
         self.remove(128, 159);
     }
+
+    #[allow(dead_code)]
     pub fn remove(&mut self, start: usize, end: usize) {
         self.data[start..=end].fill(0.);
     }

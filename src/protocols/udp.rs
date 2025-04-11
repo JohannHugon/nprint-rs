@@ -33,6 +33,8 @@ impl Protocol for UdpHeader {
     fn get_data(&self) -> &Vec<f32> {
         &self.data
     }
+
+    #[allow(dead_code)]
     fn get_headers() -> Vec<String> {
         let fields = [
             ("udp_sport", 16),
@@ -49,6 +51,7 @@ impl Protocol for UdpHeader {
 }
 
 impl UdpHeader {
+    #[allow(dead_code)]
     pub fn remove(&mut self, start: usize, end: usize) {
         self.data[start..=end].fill(0.);
     }
