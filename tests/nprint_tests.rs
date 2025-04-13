@@ -255,7 +255,7 @@ mod nprint_tests {
         assert_eq!(
             nprint.get_headers(),
             [&HEADER_IP[..], &HEADER_TCP[..], &HEADER_UDP[..]].concat(),
-            "Wrong number of packet!"
+            "Headers names mismatch"
         );
     }
 
