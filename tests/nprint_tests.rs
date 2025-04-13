@@ -243,6 +243,6 @@ mod nprint_tests {
     fn test_nprint_no_ethernet() {
         let raw_packet = vec![0x0];
         let nprint = Nprint::new(&raw_packet, vec![ProtocolType::Ipv4]);
-        assert_eq!(nprint.print(), [-1.0; 480], "Wrong number of packet!");
+        assert_eq!(nprint.print(), [-1.0; 480], "Expected default IPv4, find something else");
     }
 }
