@@ -238,4 +238,11 @@ mod nprint_tests {
         nprint.add(&raw_packet);
         assert_eq!(nprint.count(), 3usize, "Wrong number of packet!");
     }
+
+    #[test]
+    fn test_nprint_no_ethernet() {
+        let raw_packet = vec![0x0];
+        let nprint = Nprint::new(&raw_packet, vec![ProtocolType::Ipv4]);
+        assert_eq!(nprint.print(), [-1.0; 480], "Wrong number of packet!");
+    }
 }

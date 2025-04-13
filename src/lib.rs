@@ -60,38 +60,38 @@ impl Nprint {
 
 impl Headers {
     pub fn new(packet: &[u8], protocols: &[ProtocolType]) -> Headers {
-        let ethernet = EthernetPacket::new(packet).expect("Failed to parse Ethernet packet");
-        let mut ethertype = ethernet.get_ethertype();
-        let mut payload = ethernet.payload().to_vec();
-
-        if ethertype == EtherTypes::Vlan {
-            if let Some(vlan_packet) = VlanPacket::new(&payload) {
-                ethertype = vlan_packet.get_ethertype();
-                payload = vlan_packet.payload().to_vec();
-            }
-        }
-
+        let mut data: Vec<Box<dyn Protocol>> = Vec::with_capacity(protocols.len());
         let mut ipv4 = None;
         let mut tcp = None;
         let mut udp = None;
 
-        if ethertype == EtherTypes::Ipv4 {
-            if let Some(ipv4_packet) = Ipv4Packet::new(&payload) {
-                ipv4 = Some(Ipv4Header::new(&payload));
-
-                match ipv4_packet.get_next_level_protocol() {
-                    IpNextHeaderProtocols::Tcp => {
-                        tcp = Some(TcpHeader::new(ipv4_packet.payload()));
-                    }
-                    IpNextHeaderProtocols::Udp => {
-                        udp = Some(UdpHeader::new(ipv4_packet.payload()));
-                    }
-                    _ => {}
+        if let Some(ethernet) = EthernetPacket::new(packet) {
+            let mut ethertype = ethernet.get_ethertype();
+            let mut payload = ethernet.payload().to_vec();
+            if ethertype == EtherTypes::Vlan {
+                if let Some(vlan_packet) = VlanPacket::new(&payload) {
+                    ethertype = vlan_packet.get_ethertype();
+                    payload = vlan_packet.payload().to_vec();
                 }
             }
-        }
+            if ethertype == EtherTypes::Ipv4 {
+                if let Some(ipv4_packet) = Ipv4Packet::new(&payload) {
+                    ipv4 = Some(Ipv4Header::new(&payload));
 
-        let mut data: Vec<Box<dyn Protocol>> = Vec::with_capacity(protocols.len());
+                    match ipv4_packet.get_next_level_protocol() {
+                        IpNextHeaderProtocols::Tcp => {
+                            tcp = Some(TcpHeader::new(ipv4_packet.payload()));
+                        }
+                        IpNextHeaderProtocols::Udp => {
+                            udp = Some(UdpHeader::new(ipv4_packet.payload()));
+                        }
+                        _ => {}
+                    }
+                }
+            }
+        } else {
+            eprintln!("Not an EthernetPacket packet, returnin default...");
+        }
 
         for proto in protocols {
             match proto {
@@ -106,7 +106,6 @@ impl Headers {
                 }
             }
         }
-
         Headers { data }
     }
 }
