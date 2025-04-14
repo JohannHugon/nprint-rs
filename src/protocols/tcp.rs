@@ -2,7 +2,7 @@ use crate::protocols::dyn_protocols::Protocol;
 use pnet::packet::tcp::TcpPacket;
 use pnet::packet::Packet;
 
-/// Implementation of IPv4 header dissector.
+/// Implementation of TCP header.
 ///
 #[derive(Clone, PartialEq, Debug)]
 pub struct TcpHeader {
@@ -50,7 +50,7 @@ impl Protocol for TcpHeader {
         }
     }
 
-    /// Return a reference of the extracted data
+    /// Returns a reference to the extracted data, or the default header if the extraction failed.
     fn get_data(&self) -> &Vec<f32> {
         &self.data
     }
@@ -99,15 +99,12 @@ impl TcpHeader {
     }
 }
 
-/// Converts raw options bytes into a bit vector of `f32`.
+/// Converts raw options bytes into a bit vector of 320 `f32`.
 ///
 /// Fill with `-1.0` all the fields not present.
 ///
 /// # Arguments
 /// * `options` - Slice of bits from the option field of an Tcp header.
-///
-/// # Returns
-/// A 320-length vector of `f32` representing option bits.
 fn get_options_bits(options: &[u8]) -> Vec<f32> {
     let mut data = Vec::new();
     for option in options {

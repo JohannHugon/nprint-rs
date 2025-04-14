@@ -25,7 +25,7 @@ pub struct Nprint {
     nb_pkt: usize,
 }
 
-/// Internal structure handle the extracted informations of ONE single packet.
+/// Internal structure handling the extracted information of ONE single packet.
 #[derive(Debug)]
 pub struct Headers {
     /// Vector that contains ordered values extracted informations
@@ -53,7 +53,7 @@ impl Nprint {
     /// A new `Nprint` instance containing the parsed headers of the packet.
     /// # Example
     ///
-    /// ```rust
+    /// ```
     /// use nprint_rs::ProtocolType;
     /// use nprint_rs::Nprint;
     ///

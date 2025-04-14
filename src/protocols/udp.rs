@@ -2,7 +2,7 @@ use crate::protocols::dyn_protocols::Protocol;
 use pnet::packet::udp::UdpPacket;
 use pnet::packet::Packet;
 
-/// Implementation of Udp header dissector.
+/// Implementation of Udp header.
 ///
 #[derive(Clone, PartialEq, Debug)]
 pub struct UdpHeader {
@@ -42,7 +42,7 @@ impl Protocol for UdpHeader {
         }
     }
 
-    /// Return a reference of the extracted data
+    /// Returns a reference to the extracted data, or the default header if the extraction failed.
     fn get_data(&self) -> &Vec<f32> {
         &self.data
     }

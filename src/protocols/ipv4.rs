@@ -2,7 +2,7 @@ use crate::protocols::dyn_protocols::Protocol;
 use pnet::packet::ipv4::Ipv4Packet;
 use pnet::packet::Packet;
 
-/// Implementation of IPv4 header dissector.
+/// Implementation of IPv4 header.
 ///
 #[derive(Clone, PartialEq, Debug)]
 pub struct Ipv4Header {
@@ -59,12 +59,12 @@ impl Protocol for Ipv4Header {
         }
     }
 
-    /// Return a reference of the extracted data
+    /// Returns a reference to the extracted data, or the default header if the extraction failed.
     fn get_data(&self) -> &Vec<f32> {
         &self.data
     }
 
-    /// Returns the name list of all field of the protocols.
+    /// Returns the list of all field names of the protocols.
     ///
     /// Header names are suffixed with an index (e.g., `ipv4_ver_0`, `ipv4_ver_1`).
     fn get_headers() -> Vec<String> {
@@ -93,7 +93,7 @@ impl Protocol for Ipv4Header {
 }
 
 impl Ipv4Header {
-    /// Remove IPs to anonimzed header.
+    /// Remove IPs to anonymized header.
     pub fn remove_ips(&mut self) {
         self.remove(96, 127);
         self.remove(128, 159);
@@ -109,15 +109,12 @@ impl Ipv4Header {
     }
 }
 
-/// Converts raw options bytes into a bit vector of `f32`.
+/// Converts raw options bytes into a bit vector of 320 `f32`.
 ///
 /// Fill with `-1.0` all the fields not present.
 ///
 /// # Arguments
 /// * `options` - Slice of bits from the option field of an IPv4 header.
-///
-/// # Returns
-/// A 320-length vector of `f32` representing option bits.
 fn get_options_bits(options: &[u8]) -> Vec<f32> {
     let mut data = Vec::new();
     for option in options {

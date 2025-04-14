@@ -7,27 +7,19 @@ use core::fmt::Debug;
 /// float data, and accessing header metadata.
 ///
 pub trait Protocol: Debug {
-    /// Initiate the new instance of the protocols
+    /// Initializes a new instance, and return it.
     ///
     /// # Arguments
     /// * `data` - A byte slice containing the raw packet.
-    ///
-    /// # Returns
-    /// An instance of the implementing protocol.
     fn new(data: &[u8]) -> Self
     where
         Self: Sized;
-    /// Returns a reference to the vector of parsed packet.
-    ///
-    /// # Returns
-    /// A reference to a vector of 32-bit floating-point numbers representing the
-    /// parsed data content from the protocol.
+
+    /// Returns a reference to a vector of 32-bit floating-point numbers representing the
+    /// parsed data content from the protocol if not possible, may return a default representation.
     fn get_data(&self) -> &Vec<f32>;
-    /// Returns the name list of all field of the protocols.
-    ///
-    ///
-    /// # Returns
-    /// A vector of strings, each representing a field of the protocol's header.
+
+    /// Returns the list of all field names of the protocols.
     fn get_headers() -> Vec<String>
     where
         Self: Sized;
