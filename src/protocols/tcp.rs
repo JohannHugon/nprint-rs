@@ -42,7 +42,7 @@ impl Protocol for TcpHeader {
         &self.data
     }
 
-    fn get_headers() -> Vec<String> {
+    fn get_headers_name() -> Vec<String> {
         let fields = vec![
             ("tcp_sprt", 16),
             ("tcp_dprt", 16),

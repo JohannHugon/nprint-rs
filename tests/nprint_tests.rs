@@ -239,7 +239,7 @@ mod nprint_tests {
         assert_eq!(nprint.count(), 3usize, "Wrong number of packet!");
     }
     #[test]
-    fn test_nprint_get_headers() {
+    fn test_nprint_get_headers_name() {
         let raw_packet = vec![
             0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x08, 0x00, 0x45, 0x00,
             0x00, 0x3c, 0xf5, 0x1b, 0x40, 0x00, 0x40, 0x06, 0x1b, 0x24, 0xc0, 0xa8, 0x2b, 0x25,
@@ -253,7 +253,7 @@ mod nprint_tests {
             vec![ProtocolType::Ipv4, ProtocolType::Tcp, ProtocolType::Udp],
         );
         assert_eq!(
-            nprint.get_headers(),
+            nprint.get_headers_name(),
             [&HEADER_IP[..], &HEADER_TCP[..], &HEADER_UDP[..]].concat(),
             "Headers names mismatch"
         );

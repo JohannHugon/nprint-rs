@@ -76,7 +76,7 @@ mod ipv4_header_tests {
     }
 
     #[test]
-    fn test_ipv4_header_get_headers() {
+    fn test_ipv4_header_get_headers_name() {
         let expected_headers = vec![
             "ipv4_ver_0",
             "ipv4_ver_1",
@@ -560,7 +560,7 @@ mod ipv4_header_tests {
             "ipv4_opt_319",
         ];
 
-        let headers = Ipv4Header::get_headers();
+        let headers = Ipv4Header::get_headers_name();
         assert_eq!(
             headers.len(),
             expected_headers.len(),

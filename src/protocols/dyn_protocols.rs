@@ -5,7 +5,7 @@ pub trait Protocol: Debug {
     where
         Self: Sized;
     fn get_data(&self) -> &Vec<f32>;
-    fn get_headers() -> Vec<String>
+    fn get_headers_name() -> Vec<String>
     where
         Self: Sized;
 }

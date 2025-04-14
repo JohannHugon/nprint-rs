@@ -50,7 +50,7 @@ impl Protocol for Ipv4Header {
     fn get_data(&self) -> &Vec<f32> {
         &self.data
     }
-    fn get_headers() -> Vec<String> {
+    fn get_headers_name() -> Vec<String> {
         let fields = vec![
             ("ipv4_ver", 4),
             ("ipv4_hl", 4),

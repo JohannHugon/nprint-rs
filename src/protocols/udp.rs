@@ -33,7 +33,7 @@ impl Protocol for UdpHeader {
     fn get_data(&self) -> &Vec<f32> {
         &self.data
     }
-    fn get_headers() -> Vec<String> {
+    fn get_headers_name() -> Vec<String> {
         let fields = [
             ("udp_sport", 16),
             ("udp_dport", 16),
