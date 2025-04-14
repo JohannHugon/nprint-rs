@@ -90,7 +90,7 @@ impl Headers {
                 }
             }
         } else {
-            eprintln!("Not an EthernetPacket packet, returnin default...");
+            eprintln!("Not an EthernetPacket packet, returning default...");
         }
 
         for proto in protocols {
