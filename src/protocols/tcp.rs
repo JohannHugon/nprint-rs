@@ -58,7 +58,7 @@ impl Protocol for TcpHeader {
     /// Returns the name list of all field of the protocols.
     ///
     /// Header names are suffixed with an index (e.g., `tcp_sprt_0`, `tcp_sprt_1`).
-    fn get_headers() -> Vec<String> {
+    fn get_headers_name() -> Vec<String> {
         let fields = vec![
             ("tcp_sprt", 16),
             ("tcp_dprt", 16),

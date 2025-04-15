@@ -20,7 +20,7 @@ pub trait Protocol: Debug {
     fn get_data(&self) -> &Vec<f32>;
 
     /// Returns the list of all field names of the protocols.
-    fn get_headers() -> Vec<String>
+    fn get_headers_name() -> Vec<String>
     where
         Self: Sized;
 }
