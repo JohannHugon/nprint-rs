@@ -52,7 +52,7 @@ mod tcp_header_tests {
     }
 
     #[test]
-    fn test_tcp_header_get_headers() {
+    fn test_tcp_header_get_headers_name() {
         let expected_headers = vec![
             "tcp_sprt_0",
             "tcp_sprt_1",
@@ -536,7 +536,7 @@ mod tcp_header_tests {
             "tcp_opt_319",
         ];
 
-        let headers = TcpHeader::get_headers();
+        let headers = TcpHeader::get_headers_name();
         for (i, expected) in expected_headers.iter().enumerate() {
             assert_eq!(
                 headers[i], *expected,

@@ -2,12 +2,16 @@ use crate::protocols::dyn_protocols::Protocol;
 use pnet::packet::udp::UdpPacket;
 use pnet::packet::Packet;
 
+/// Implementation of Udp header.
+///
 #[derive(Clone, PartialEq, Debug)]
 pub struct UdpHeader {
+    /// A flat vector of parsed bit values, size up to 64 bits as it's the max UDP header length
     data: Vec<f32>,
 }
 
 impl Default for UdpHeader {
+    /// Returns an `UdpHeader` filled with 64 "-1"
     fn default() -> Self {
         Self {
             data: vec![-1.; 64],
@@ -16,6 +20,13 @@ impl Default for UdpHeader {
 }
 
 impl Protocol for UdpHeader {
+    /// Constructs an `UdpHeader` from a raw bytes UDP packet.
+    ///
+    /// If the input is a valid Udp packet, its fields are parsed bit by bit.
+    /// If the packet is invalid or cannot be parsed, return Default.
+    ///
+    /// # Arguments
+    /// * `packet` - Raw bytes representing an Udp packet.
     fn new(packet: &[u8]) -> UdpHeader {
         if let Some(packet) = UdpPacket::new(packet) {
             let mut data = Vec::with_capacity(64);
@@ -30,10 +41,16 @@ impl Protocol for UdpHeader {
             UdpHeader::default()
         }
     }
+
+    /// Returns a reference to the extracted data, or the default header if the extraction failed.
     fn get_data(&self) -> &Vec<f32> {
         &self.data
     }
-    fn get_headers() -> Vec<String> {
+
+    /// Returns the name list of all field of the protocols.
+    ///
+    /// Header names are suffixed with an index (e.g., `udp_sport_0`, `udp_sport_1`).
+    fn get_headers_name() -> Vec<String> {
         let fields = [
             ("udp_sport", 16),
             ("udp_dport", 16),
@@ -49,6 +66,11 @@ impl Protocol for UdpHeader {
 }
 
 impl UdpHeader {
+    /// Remove a given range.
+    ///
+    /// # Arguments
+    /// * `start` - Starting bit index (inclusive).
+    /// * `end` - Ending bit index (inclusive).
     pub fn remove(&mut self, start: usize, end: usize) {
         self.data[start..=end].fill(0.);
     }
