@@ -40,11 +40,11 @@ More information on how to do it in [CONTRIBUTING](CONTRIBUTING.md)
  
 ### Miscellaneous
 - Better Readme ✔ 
-- Documentation
+- Documentation ✔ 
 - Set up test github actions ✔ 
 
 ## How to contribute
 If you have any doubts or need additional information, don't hesitate to ask for more information in the comments section of an issue.
-Go to [CONTRUBUTING.md](CONTRUBUTING)
+Go to [CONTRIBUTING](CONTRIBUTING.md)
 
 

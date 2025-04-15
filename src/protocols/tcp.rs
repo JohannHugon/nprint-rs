@@ -2,12 +2,16 @@ use crate::protocols::dyn_protocols::Protocol;
 use pnet::packet::tcp::TcpPacket;
 use pnet::packet::Packet;
 
+/// Implementation of TCP header.
+///
 #[derive(Clone, PartialEq, Debug)]
 pub(crate) struct TcpHeader {
+    /// A flat vector of parsed bit values, size up to 480 bits as it's the max TCP header length
     data: Vec<f32>,
 }
 
 impl Default for TcpHeader {
+    /// Returns an `TcpHeader` filled with 480 "-1"
     fn default() -> Self {
         Self {
             data: vec![-1.; 480],
@@ -16,6 +20,13 @@ impl Default for TcpHeader {
 }
 
 impl Protocol for TcpHeader {
+    /// Constructs an `TcpHeader` from a raw bytes Tcp packet.
+    ///
+    /// If the input is a valid Tcp packet, its fields are parsed bit by bit.
+    /// If the packet is invalid or cannot be parsed, return Default.
+    ///
+    /// # Arguments
+    /// * `packet` - Raw bytes representing an Tcp packet.
     fn new(packet: &[u8]) -> TcpHeader {
         if let Some(packet) = TcpPacket::new(packet) {
             let option = packet.get_options_raw();
@@ -38,10 +49,15 @@ impl Protocol for TcpHeader {
             TcpHeader::default()
         }
     }
+
+    /// Returns a reference to the extracted data, or the default header if the extraction failed.
     fn get_data(&self) -> &Vec<f32> {
         &self.data
     }
-
+  
+    /// Returns the name list of all field of the protocols.
+    ///
+    /// Header names are suffixed with an index (e.g., `tcp_sprt_0`, `tcp_sprt_1`).
     #[allow(dead_code)]
     fn get_headers() -> Vec<String> {
         let fields = vec![
@@ -74,12 +90,24 @@ impl Protocol for TcpHeader {
 }
 
 impl TcpHeader {
+
+    /// Remove a given range.
+    ///
+    /// # Arguments
+    /// * `start` - Starting bit index (inclusive).
+    /// * `end` - Ending bit index (inclusive).
     #[allow(dead_code)]
     pub fn remove(&mut self, start: usize, end: usize) {
         self.data[start..=end].fill(0.);
     }
 }
 
+/// Converts raw options bytes into a bit vector of 320 `f32`.
+///
+/// Fill with `-1.0` all the fields not present.
+///
+/// # Arguments
+/// * `options` - Slice of bits from the option field of an Tcp header.
 fn get_options_bits(options: &[u8]) -> Vec<f32> {
     let mut data = Vec::new();
     for option in options {
