@@ -110,6 +110,24 @@ impl Nprint {
     pub fn count(&self) -> usize {
         self.nb_pkt
     }
+
+    pub fn get_headers_name(&self) -> Vec<String> {
+        let mut output = vec![];
+        for proto in &self.protocols {
+            match proto {
+                ProtocolType::Ipv4 => {
+                    output.extend(Ipv4Header::get_headers_name());
+                }
+                ProtocolType::Tcp => {
+                    output.extend(TcpHeader::get_headers_name());
+                }
+                ProtocolType::Udp => {
+                    output.extend(UdpHeader::get_headers_name());
+                }
+            }
+        }
+        output
+    }
 }
 
 impl Headers {
