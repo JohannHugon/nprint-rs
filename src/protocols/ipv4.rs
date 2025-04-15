@@ -67,7 +67,6 @@ impl Protocol for Ipv4Header {
     /// Returns the list of all field names of the protocols.
     ///
     /// Header names are suffixed with an index (e.g., `ipv4_ver_0`, `ipv4_ver_1`).
-
     fn get_headers_name() -> Vec<String> {
         let fields = vec![
             ("ipv4_ver", 4),
@@ -206,7 +205,7 @@ mod ipv4_header_tests {
     }
 
     #[test]
-    fn test_ipv4_header_get_headers() {
+    fn test_ipv4_header_get_headers_name() {
         let expected_headers = vec![
             "ipv4_ver_0",
             "ipv4_ver_1",
@@ -690,7 +689,7 @@ mod ipv4_header_tests {
             "ipv4_opt_319",
         ];
 
-        let headers = Ipv4Header::get_headers();
+        let headers = Ipv4Header::get_headers_name();
         assert_eq!(
             headers.len(),
             expected_headers.len(),

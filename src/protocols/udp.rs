@@ -50,7 +50,6 @@ impl Protocol for UdpHeader {
     /// Returns the name list of all field of the protocols.
     ///
     /// Header names are suffixed with an index (e.g., `udp_sport_0`, `udp_sport_1`).
-
     fn get_headers_name() -> Vec<String> {
         let fields = [
             ("udp_sport", 16),
@@ -104,7 +103,7 @@ mod udp_header_tests {
     }
 
     #[test]
-    fn test_udp_header_get_headers() {
+    fn test_udp_header_get_headers_name() {
         let expected_headers = vec![
             "udp_sport_0",
             "udp_sport_1",
@@ -172,7 +171,7 @@ mod udp_header_tests {
             "udp_cksum_15",
         ];
 
-        let headers = UdpHeader::get_headers();
+        let headers = UdpHeader::get_headers_name();
         for (i, expected) in expected_headers.iter().enumerate() {
             assert_eq!(
                 headers[i], *expected,
