@@ -67,7 +67,6 @@ impl Protocol for UdpHeader {
 }
 
 impl UdpHeader {
-
     /// Remove a given range.
     ///
     /// # Arguments

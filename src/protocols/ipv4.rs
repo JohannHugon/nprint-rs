@@ -64,7 +64,7 @@ impl Protocol for Ipv4Header {
         &self.data
     }
 
-  /// Returns the list of all field names of the protocols.
+    /// Returns the list of all field names of the protocols.
     ///
     /// Header names are suffixed with an index (e.g., `ipv4_ver_0`, `ipv4_ver_1`).
     #[allow(dead_code)]

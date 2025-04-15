@@ -54,7 +54,7 @@ impl Protocol for TcpHeader {
     fn get_data(&self) -> &Vec<f32> {
         &self.data
     }
-  
+
     /// Returns the name list of all field of the protocols.
     ///
     /// Header names are suffixed with an index (e.g., `tcp_sprt_0`, `tcp_sprt_1`).
@@ -90,7 +90,6 @@ impl Protocol for TcpHeader {
 }
 
 impl TcpHeader {
-
     /// Remove a given range.
     ///
     /// # Arguments
