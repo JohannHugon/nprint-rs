@@ -18,7 +18,7 @@ use pnet::packet::Packet;
 #[derive(Debug)]
 pub struct Nprint {
     /// Vector that contains all the parsed headers for each packet.
-    pub data: Vec<Headers>,
+    data: Vec<Headers>,
     /// Ordered list of Protocol selected for this Nprint.
     protocols: Vec<ProtocolType>,
     /// Number of packets processed.
@@ -27,7 +27,7 @@ pub struct Nprint {
 
 /// Internal structure handling the extracted information of ONE single packet.
 #[derive(Debug)]
-pub struct Headers {
+pub(crate) struct Headers {
     /// Vector that contains ordered values extracted informations
     pub data: Vec<Box<dyn Protocol>>,
 }

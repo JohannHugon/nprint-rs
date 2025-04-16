@@ -6,7 +6,7 @@ use core::fmt::Debug;
 /// for constructing an instance from a byte slice, retrieving parsed
 /// float data, and accessing header metadata.
 ///
-pub trait Protocol: Debug {
+pub(crate) trait Protocol: Debug {
     /// Initializes a new instance, and return it.
     ///
     /// # Arguments
