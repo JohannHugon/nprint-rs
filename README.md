@@ -17,7 +17,7 @@ Or simply by executing:
 cargo add nprint-rs
 ```
 ### Usage
-Documentation https://docs.rs/TBD/
+Documentation [here](https://docs.rs/nprint-rs/latest/nprint_rs/)
 
 ## Roadmap
 This is an open roadmap, if you want to request or update something don't hesitate to open an issue and then we'll talk about it.
