@@ -1,7 +1,7 @@
 //! nPrint is a standard data representation for network traffic, designed for direct use with machine learning algorithms, eliminating the need for feature engineering in various traffic analysis tasks. Developing a Rust implementation of nPrint will simplify the creation of network systems that leverage real-world ML deployments, rather than just training and deploying models offline.
 pub mod protocols;
-use crate::protocols::dyn_protocols::Protocol;
 use crate::protocols::ipv4::Ipv4Header;
+use crate::protocols::packet::PacketHeader;
 use crate::protocols::tcp::TcpHeader;
 use crate::protocols::udp::UdpHeader;
 
@@ -29,7 +29,7 @@ pub struct Nprint {
 #[derive(Debug)]
 pub(crate) struct Headers {
     /// Vector that contains ordered values extracted informations
-    pub data: Vec<Box<dyn Protocol>>,
+    pub data: Vec<Box<dyn PacketHeader>>,
 }
 
 /// Enum that contains the current implemented type extractable
@@ -111,18 +111,18 @@ impl Nprint {
         self.nb_pkt
     }
 
-    pub fn get_headers_name(&self) -> Vec<String> {
+    pub fn get_headers(&self) -> Vec<String> {
         let mut output = vec![];
         for proto in &self.protocols {
             match proto {
                 ProtocolType::Ipv4 => {
-                    output.extend(Ipv4Header::get_headers_name());
+                    output.extend(Ipv4Header::get_headers());
                 }
                 ProtocolType::Tcp => {
-                    output.extend(TcpHeader::get_headers_name());
+                    output.extend(TcpHeader::get_headers());
                 }
                 ProtocolType::Udp => {
-                    output.extend(UdpHeader::get_headers_name());
+                    output.extend(UdpHeader::get_headers());
                 }
             }
         }
@@ -144,7 +144,7 @@ impl Headers {
     /// A `Headers` struct containing the parsed protocol headers as specified.
     ///
     pub fn new(packet: &[u8], protocols: &[ProtocolType]) -> Headers {
-        let mut data: Vec<Box<dyn Protocol>> = Vec::with_capacity(protocols.len());
+        let mut data: Vec<Box<dyn PacketHeader>> = Vec::with_capacity(protocols.len());
         let mut ipv4 = None;
         let mut tcp = None;
         let mut udp = None;

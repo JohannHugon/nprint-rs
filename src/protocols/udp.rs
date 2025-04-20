@@ -1,4 +1,4 @@
-use crate::protocols::dyn_protocols::Protocol;
+use crate::protocols::packet::PacketHeader;
 use pnet::packet::udp::UdpPacket;
 use pnet::packet::Packet;
 
@@ -19,7 +19,7 @@ impl Default for UdpHeader {
     }
 }
 
-impl Protocol for UdpHeader {
+impl PacketHeader for UdpHeader {
     /// Constructs an `UdpHeader` from a raw bytes UDP packet.
     ///
     /// If the input is a valid Udp packet, its fields are parsed bit by bit.
@@ -50,7 +50,7 @@ impl Protocol for UdpHeader {
     /// Returns the name list of all field of the protocols.
     ///
     /// Header names are suffixed with an index (e.g., `udp_sport_0`, `udp_sport_1`).
-    fn get_headers_name() -> Vec<String> {
+    fn get_headers() -> Vec<String> {
         let fields = [
             ("udp_sport", 16),
             ("udp_dport", 16),
@@ -103,7 +103,7 @@ mod udp_header_tests {
     }
 
     #[test]
-    fn test_udp_header_get_headers_name() {
+    fn test_udp_header_get_headers() {
         let expected_headers = vec![
             "udp_sport_0",
             "udp_sport_1",
@@ -171,7 +171,7 @@ mod udp_header_tests {
             "udp_cksum_15",
         ];
 
-        let headers = UdpHeader::get_headers_name();
+        let headers = UdpHeader::get_headers();
         for (i, expected) in expected_headers.iter().enumerate() {
             assert_eq!(
                 headers[i], *expected,

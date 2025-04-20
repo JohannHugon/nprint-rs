@@ -1,4 +1,4 @@
-use crate::protocols::dyn_protocols::Protocol;
+use crate::protocols::packet::PacketHeader;
 use pnet::packet::tcp::TcpPacket;
 use pnet::packet::Packet;
 
@@ -19,7 +19,7 @@ impl Default for TcpHeader {
     }
 }
 
-impl Protocol for TcpHeader {
+impl PacketHeader for TcpHeader {
     /// Constructs an `TcpHeader` from a raw bytes Tcp packet.
     ///
     /// If the input is a valid Tcp packet, its fields are parsed bit by bit.
@@ -58,7 +58,7 @@ impl Protocol for TcpHeader {
     /// Returns the name list of all field of the protocols.
     ///
     /// Header names are suffixed with an index (e.g., `tcp_sprt_0`, `tcp_sprt_1`).
-    fn get_headers_name() -> Vec<String> {
+    fn get_headers() -> Vec<String> {
         let fields = vec![
             ("tcp_sprt", 16),
             ("tcp_dprt", 16),
@@ -170,7 +170,7 @@ mod tcp_header_tests {
     }
 
     #[test]
-    fn test_tcp_header_get_headers_name() {
+    fn test_tcp_header_get_headers() {
         let expected_headers = vec![
             "tcp_sprt_0",
             "tcp_sprt_1",
@@ -654,7 +654,7 @@ mod tcp_header_tests {
             "tcp_opt_319",
         ];
 
-        let headers = TcpHeader::get_headers_name();
+        let headers = TcpHeader::get_headers();
         for (i, expected) in expected_headers.iter().enumerate() {
             assert_eq!(
                 headers[i], *expected,

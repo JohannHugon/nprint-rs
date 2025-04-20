@@ -6,7 +6,7 @@ use core::fmt::Debug;
 /// for constructing an instance from a byte slice, retrieving parsed
 /// float data, and accessing header metadata.
 ///
-pub(crate) trait Protocol: Debug {
+pub(crate) trait PacketHeader: Debug {
     /// Initializes a new instance, and return it.
     ///
     /// # Arguments
@@ -20,7 +20,7 @@ pub(crate) trait Protocol: Debug {
     fn get_data(&self) -> &Vec<f32>;
 
     /// Returns the list of all field names of the protocols.
-    fn get_headers_name() -> Vec<String>
+    fn get_headers() -> Vec<String>
     where
         Self: Sized;
 }

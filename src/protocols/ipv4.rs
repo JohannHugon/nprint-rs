@@ -1,4 +1,4 @@
-use crate::protocols::dyn_protocols::Protocol;
+use crate::protocols::packet::PacketHeader;
 use pnet::packet::ipv4::Ipv4Packet;
 use pnet::packet::Packet;
 
@@ -19,7 +19,7 @@ impl Default for Ipv4Header {
     }
 }
 
-impl Protocol for Ipv4Header {
+impl PacketHeader for Ipv4Header {
     /// Constructs an `Ipv4Header` from a raw bytes IPv4 packet.
     ///
     /// If the input is a valid IPv4 packet, its fields are parsed bit by bit.
@@ -67,7 +67,7 @@ impl Protocol for Ipv4Header {
     /// Returns the list of all field names of the protocols.
     ///
     /// Header names are suffixed with an index (e.g., `ipv4_ver_0`, `ipv4_ver_1`).
-    fn get_headers_name() -> Vec<String> {
+    fn get_headers() -> Vec<String> {
         let fields = vec![
             ("ipv4_ver", 4),
             ("ipv4_hl", 4),
@@ -205,7 +205,7 @@ mod ipv4_header_tests {
     }
 
     #[test]
-    fn test_ipv4_header_get_headers_name() {
+    fn test_ipv4_header_get_headers() {
         let expected_headers = vec![
             "ipv4_ver_0",
             "ipv4_ver_1",
@@ -689,7 +689,7 @@ mod ipv4_header_tests {
             "ipv4_opt_319",
         ];
 
-        let headers = Ipv4Header::get_headers_name();
+        let headers = Ipv4Header::get_headers();
         assert_eq!(
             headers.len(),
             expected_headers.len(),
