@@ -110,7 +110,7 @@ impl Nprint {
     pub fn count(&self) -> usize {
         self.nb_pkt
     }
-    
+
     /// Return the name list of all fields of all the protocols present in this Nprint
     ///
     /// # Returns
