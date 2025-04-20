@@ -152,12 +152,15 @@ impl Headers {
         if let Some(ethernet) = EthernetPacket::new(packet) {
             let mut ethertype = ethernet.get_ethertype();
             let mut payload = ethernet.payload().to_vec();
+
+            // Pop VLAN's Header
             if ethertype == EtherTypes::Vlan {
                 if let Some(vlan_packet) = VlanPacket::new(&payload) {
                     ethertype = vlan_packet.get_ethertype();
                     payload = vlan_packet.payload().to_vec();
                 }
             }
+
             if ethertype == EtherTypes::Ipv4 {
                 if let Some(ipv4_packet) = Ipv4Packet::new(&payload) {
                     ipv4 = Some(Ipv4Header::new(&payload));
