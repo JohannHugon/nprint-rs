@@ -111,6 +111,11 @@ impl Nprint {
         self.nb_pkt
     }
 
+    /// Return the name list of all fields of all the protocols present in this Nprint
+    ///
+    /// # Returns
+    ///
+    /// A list of header names that are prefixed by the protocol and suffixed with an index (e.g., `tcp_sprt_0`, `tcp_sprt_1`).
     pub fn get_headers(&self) -> Vec<String> {
         let mut output = vec![];
         for proto in &self.protocols {
