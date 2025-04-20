@@ -31,3 +31,6 @@ If applicable, add screenshots our output text to help explain your problem.
 
 **Additional context**
 Add any other context about the problem here.
+
+**Additional files**
+Add any PCAP file related to your problem.
