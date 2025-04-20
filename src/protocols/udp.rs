@@ -63,6 +63,12 @@ impl PacketHeader for UdpHeader {
             .flat_map(|(name, bits)| (0..*bits).map(move |i| format!("{}_{}", name, i)))
             .collect()
     }
+
+    ///  Anonymize port source and destination
+    fn anonymize(&mut self) {
+        self.remove(0, 15); // Port source
+        self.remove(16, 31); // Port destination
+    }
 }
 
 impl UdpHeader {
@@ -71,7 +77,6 @@ impl UdpHeader {
     /// # Arguments
     /// * `start` - Starting bit index (inclusive).
     /// * `end` - Ending bit index (inclusive).
-    #[allow(dead_code)]
     pub fn remove(&mut self, start: usize, end: usize) {
         self.data[start..=end].fill(0.);
     }
@@ -190,5 +195,16 @@ mod udp_header_tests {
             UdpHeader::default(),
             "Expected data to be default."
         );
+    }
+
+    #[test]
+    fn test_tcp_header_anonymize() {
+        let raw_packet: Vec<u8> = vec![0xe1, 0x15, 0xe1, 0x15, 0x00, 0x34, 0x85, 0x00];
+        let mut udp_header = UdpHeader::new(&raw_packet);
+        udp_header.anonymize();
+        let anon = udp_header.get_data();
+        for ip_bit in anon.iter().take(0).skip(31) {
+            assert_eq!(*ip_bit, 0., "Expected data bit 0-31 to be 0.");
+        }
     }
 }

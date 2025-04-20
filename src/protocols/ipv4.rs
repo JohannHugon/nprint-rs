@@ -90,22 +90,20 @@ impl PacketHeader for Ipv4Header {
             .flat_map(|(name, bits)| (0..*bits).map(move |i| format!("{}_{}", name, i)))
             .collect()
     }
+
+    /// Remove IPs to anonymized header.
+    fn anonymize(&mut self) {
+        self.remove(96, 127); // IP Source
+        self.remove(128, 159); // IP Destination
+    }
 }
 
 impl Ipv4Header {
-    /// Remove IPs to anonymized header.
-    #[allow(dead_code)]
-    pub fn remove_ips(&mut self) {
-        self.remove(96, 127);
-        self.remove(128, 159);
-    }
-
     /// Remove a given range.
     ///
     /// # Arguments
     /// * `start` - Starting bit index (inclusive).
     /// * `end` - Ending bit index (inclusive).
-    #[allow(dead_code)]
     pub fn remove(&mut self, start: usize, end: usize) {
         self.data[start..=end].fill(0.);
     }
@@ -180,27 +178,6 @@ mod ipv4_header_tests {
                 "IPv4 header doesn't match expected on bit {}.",
                 i
             );
-        }
-    }
-
-    #[test]
-    fn test_ipv4_header_remove_ips() {
-        let raw_packet: Vec<u8> = vec![
-            0x45, 0x00, 0x00, 0x3c, 0xf5, 0x1b, 0x40, 0x00, 0x40, 0x06, 0x1b, 0x24, 0xc0, 0xa8,
-            0x2b, 0x25, 0xc6, 0x26, 0x78, 0x88, 0x97, 0xa4, 0x01, 0xbb, 0x96, 0x2e, 0x5e, 0x0b,
-            0x00, 0x00, 0x00, 0x00, 0xa0, 0x02, 0x72, 0x10, 0x25, 0xd4, 0x00, 0x00, 0x02, 0x04,
-            0x05, 0xb4, 0x04, 0x02, 0x08, 0x0a, 0xe3, 0xe2, 0x14, 0x23, 0x00, 0x00, 0x00, 0x00,
-            0x01, 0x03, 0x03, 0x07,
-        ];
-        let mut ipv4_header = Ipv4Header::new(&raw_packet);
-        ipv4_header.remove_ips();
-        let without_ip = ipv4_header.get_data();
-        println!("{:?}", without_ip);
-        for ip_bit in without_ip.iter().take(128).skip(96) {
-            assert_eq!(*ip_bit, 0., "Expected data bit 96-127 to be 0.");
-        }
-        for ip_bit in without_ip.iter().take(160).skip(128) {
-            assert_eq!(*ip_bit, 0., "Expected data bit 128-159 to be 0.");
         }
     }
 
@@ -756,5 +733,22 @@ mod ipv4_header_tests {
             Ipv4Header::default(),
             "Expected data to be default."
         );
+    }
+
+    #[test]
+    fn test_ipv4_header_anonymize() {
+        let raw_packet: Vec<u8> = vec![
+            0x45, 0x00, 0x00, 0x3c, 0xf5, 0x1b, 0x40, 0x00, 0x40, 0x06, 0x1b, 0x24, 0xc0, 0xa8,
+            0x2b, 0x25, 0xc6, 0x26, 0x78, 0x88, 0x97, 0xa4, 0x01, 0xbb, 0x96, 0x2e, 0x5e, 0x0b,
+            0x00, 0x00, 0x00, 0x00, 0xa0, 0x02, 0x72, 0x10, 0x25, 0xd4, 0x00, 0x00, 0x02, 0x04,
+            0x05, 0xb4, 0x04, 0x02, 0x08, 0x0a, 0xe3, 0xe2, 0x14, 0x23, 0x00, 0x00, 0x00, 0x00,
+            0x01, 0x03, 0x03, 0x07,
+        ];
+        let mut ipv4_header = Ipv4Header::new(&raw_packet);
+        ipv4_header.anonymize();
+        let anon = ipv4_header.get_data();
+        for ip_bit in anon.iter().take(160).skip(96) {
+            assert_eq!(*ip_bit, 0., "Expected data bit 96-160 to be 0.");
+        }
     }
 }

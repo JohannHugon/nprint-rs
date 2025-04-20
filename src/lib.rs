@@ -128,6 +128,15 @@ impl Nprint {
         }
         output
     }
+
+    /// Remove sensitive data from the captured header
+    pub fn anonymize(&mut self) {
+        for packet in self.data.iter_mut() {
+            for header in packet.data.iter_mut() {
+                header.anonymize();
+            }
+        }
+    }
 }
 
 impl Headers {
