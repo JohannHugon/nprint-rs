@@ -2,6 +2,12 @@
 name = "nprint-rs"
 version = "0.1.0"
 edition = "2021"
+authors = ["Johann Hugon <nprint-rs@johannhugon.com>","David Julien"]
+description = "Rust adaptation of Nprint"
+readme = "README.md"
+repository = "https://github.com/JohannHugon/nprint-rs"
+license = "MIT"
+keywords = ["network","parsing", "nprint","machinelearning",]
 
 [lib]
 bench = false
