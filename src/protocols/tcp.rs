@@ -86,6 +86,12 @@ impl PacketHeader for TcpHeader {
             .flat_map(|(name, bits)| (0..*bits).map(move |i| format!("{}_{}", name, i)))
             .collect()
     }
+
+    ///  Anonymize port source and destination
+    fn anonymize(&mut self) {
+        self.remove(0, 15); // Port source
+        self.remove(16, 31); // Port destination
+    }
 }
 
 impl TcpHeader {
@@ -94,7 +100,6 @@ impl TcpHeader {
     /// # Arguments
     /// * `start` - Starting bit index (inclusive).
     /// * `end` - Ending bit index (inclusive).
-    #[allow(dead_code)]
     pub fn remove(&mut self, start: usize, end: usize) {
         self.data[start..=end].fill(0.);
     }
@@ -673,5 +678,20 @@ mod tcp_header_tests {
             TcpHeader::default(),
             "Expected data to be default."
         );
+    }
+
+    #[test]
+    fn test_tcp_header_anonymize() {
+        let raw_packet: Vec<u8> = vec![
+            0xde, 0x92, 0x01, 0xbb, 0x72, 0x07, 0xf6, 0xa0, 0x00, 0x00, 0x00, 0x00, 0x80, 0x02,
+            0x20, 0x00, 0x05, 0x24, 0x00, 0x00, 0x02, 0x04, 0x05, 0xb4, 0x01, 0x03, 0x03, 0x02,
+            0x01, 0x01, 0x04, 0x02,
+        ];
+        let mut tcp_header = TcpHeader::new(&raw_packet);
+        tcp_header.anonymize();
+        let anon = tcp_header.get_data();
+        for ip_bit in anon.iter().take(0).skip(32) {
+            assert_eq!(*ip_bit, 0., "Expected data bit 0-31 to be 0.");
+        }
     }
 }

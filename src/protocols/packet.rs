@@ -23,4 +23,7 @@ pub(crate) trait PacketHeader: Debug {
     fn get_headers() -> Vec<String>
     where
         Self: Sized;
+
+    /// Remove the sensitive data
+    fn anonymize(&mut self);
 }

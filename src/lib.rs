@@ -128,6 +128,14 @@ impl Nprint {
         }
         output
     }
+
+    pub fn annonymize(&mut self) {
+        for packet in self.data.iter_mut() {
+            for header in packet.data.iter_mut() {
+                header.anonymize();
+            }
+        }
+    }
 }
 
 impl Headers {
