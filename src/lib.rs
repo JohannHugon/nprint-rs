@@ -1,5 +1,5 @@
 //! nPrint is a standard data representation for network traffic, designed for direct use with machine learning algorithms, eliminating the need for feature engineering in various traffic analysis tasks. Developing a Rust implementation of nPrint will simplify the creation of network systems that leverage real-world ML deployments, rather than just training and deploying models offline.
-pub mod protocols;
+pub(crate) mod protocols;
 use crate::protocols::ipv4::Ipv4Header;
 use crate::protocols::packet::PacketHeader;
 use crate::protocols::tcp::TcpHeader;
