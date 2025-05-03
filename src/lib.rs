@@ -2,6 +2,7 @@
 pub(crate) mod protocols;
 use crate::protocols::ipv4::Ipv4Header;
 use crate::protocols::packet::PacketHeader;
+use crate::protocols::payload::PayloadHeader;
 use crate::protocols::tcp::TcpHeader;
 use crate::protocols::udp::UdpHeader;
 
@@ -38,6 +39,7 @@ pub enum ProtocolType {
     Ipv4,
     Tcp,
     Udp,
+    Payload,
 }
 
 impl Nprint {
@@ -129,6 +131,9 @@ impl Nprint {
                 ProtocolType::Udp => {
                     output.extend(UdpHeader::get_headers());
                 }
+                ProtocolType::Payload => {
+                    output.extend(PayloadHeader::get_headers());
+                }
             }
         }
         output
@@ -162,32 +167,41 @@ impl Headers {
         let mut ipv4 = None;
         let mut tcp = None;
         let mut udp = None;
+        let mut payload = vec![];
 
         if let Some(ethernet) = EthernetPacket::new(packet) {
             let mut ethertype = ethernet.get_ethertype();
-            let mut payload = ethernet.payload().to_vec();
+            payload = ethernet.payload().to_vec();
 
             // Pop VLAN's Header
             if ethertype == EtherTypes::Vlan {
-                if let Some(vlan_packet) = VlanPacket::new(&payload) {
+                if let Some(vlan_packet) = VlanPacket::new(&payload.clone()) {
                     ethertype = vlan_packet.get_ethertype();
                     payload = vlan_packet.payload().to_vec();
                 }
             }
 
-            if ethertype == EtherTypes::Ipv4 {
-                if let Some(ipv4_packet) = Ipv4Packet::new(&payload) {
-                    ipv4 = Some(Ipv4Header::new(&payload));
-
-                    match ipv4_packet.get_next_level_protocol() {
-                        IpNextHeaderProtocols::Tcp => {
-                            tcp = Some(TcpHeader::new(ipv4_packet.payload()));
+            if protocols != [ProtocolType::Payload] {
+                if ethertype == EtherTypes::Ipv4 {
+                    if let Some(ipv4_packet) = Ipv4Packet::new(&payload.clone()) {
+                        ipv4 = Some(Ipv4Header::new(&payload));
+                        payload = ipv4_packet.payload().to_vec();
+                        match ipv4_packet.get_next_level_protocol() {
+                            IpNextHeaderProtocols::Tcp => {
+                                tcp = Some(TcpHeader::new(ipv4_packet.payload()));
+                                // Access TCP payload
+                                payload = payload[((payload[12] >> 4) * 4) as usize..].to_vec();
+                            }
+                            IpNextHeaderProtocols::Udp => {
+                                udp = Some(UdpHeader::new(ipv4_packet.payload()));
+                                // Access UDP payload
+                                payload = payload[8..].to_vec();
+                            }
+                            _ => {}
                         }
-                        IpNextHeaderProtocols::Udp => {
-                            udp = Some(UdpHeader::new(ipv4_packet.payload()));
-                        }
-                        _ => {}
                     }
+                } else {
+                    todo!() //Ipv6
                 }
             }
         } else {
@@ -204,6 +218,9 @@ impl Headers {
                 }
                 ProtocolType::Udp => {
                     data.push(Box::new(udp.clone().unwrap_or_else(UdpHeader::default)));
+                }
+                ProtocolType::Payload => {
+                    data.push(Box::new(UdpHeader::new(&payload)));
                 }
             }
         }
