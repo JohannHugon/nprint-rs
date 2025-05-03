@@ -121,7 +121,7 @@ mod payload_header_tests {
     #[test]
     fn test_payload_header_get_headers() {
         let expected_headers: Vec<String> = {
-            let fields = vec![("Payload_bit", 1514 * 8)];
+            let fields = [("Payload_bit", 1514 * 8)];
             fields
                 .iter()
                 .flat_map(|(name, bits)| (0..*bits).map(move |i| format!("{}_{}", name, i)))
