@@ -4,7 +4,7 @@ use crate::protocols::packet::PacketHeader;
 ///
 #[derive(Clone, PartialEq, Debug)]
 pub(crate) struct PayloadHeader {
-    /// A flat vector of parsed bit values, size up to 1514 bits as it's the max Payload header length
+    /// A flat vector of parsed bit values, size up to 1514*8 bits as it's the max Payload length
     data: Vec<f32>, // 1514*8 = MTU
 }
 
@@ -20,8 +20,8 @@ impl Default for PayloadHeader {
 impl PacketHeader for PayloadHeader {
     /// Constructs an `PayloadHeader` from a raw bytes Payload packet.
     ///
-    /// If the input is a valid Payload packet, its fields are parsed bit by bit.
-    /// If the packet is invalid or cannot be parsed, return Default.
+    /// If the input as a valid size, it willbe parsed bit by bit.
+    /// If the packet too long invalid, return Default.
     ///
     /// # Arguments
     /// * `packet` - Raw bytes representing an Payload packet.
@@ -45,7 +45,7 @@ impl PacketHeader for PayloadHeader {
 
     /// Returns the list of all field names of the protocols.
     ///
-    /// Header names are suffixed with an index (e.g., `Payload_ver_0`, `Payload_ver_1`).
+    /// Header names are suffixed with an index (e.g., `Payload_bit_0`, `Payload_bit_1`).
     fn get_headers() -> Vec<String> {
         let fields = [("Payload_bit", 1514 * 8)];
         fields
@@ -54,7 +54,7 @@ impl PacketHeader for PayloadHeader {
             .collect()
     }
 
-    /// Nothing to remove to anonymized header.
+    /// Nothing to remove.
     fn anonymize(&mut self) {}
 }
 
@@ -74,7 +74,6 @@ mod payload_header_tests {
             0x01, 0x03, 0x03, 0x07,
         ];
         let payload_header = PayloadHeader::new(&raw_packet);
-        //assert_eq!(Payload_header.get_data().len(), 480, "Expected 480 bits in PayloadHeader data.");
         let mut payload_header_test = vec![
             0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0,
